@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tushit Audi — Web Developer & Automation Specialist</title>
-  <meta name="description" content="Editorial portfolio of Tushit Audi — Web Developer & Automation Specialist. High-performance web applications and automated workflows.">
+  <title>How We Work | Tushit Audi — Web Developer & Automation Specialist</title>
+  <meta name="description" content="From a free discovery call to a fully launched website in 5 days — no pressure, no obligations.">
   
   <!-- Google Fonts: Syne (Editorial/Fashion display) & Inter (Minimal Body/Labels) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,16 +18,21 @@
   <!-- Matte Grain Texture Overlay -->
   <div class="grain-overlay" aria-hidden="true"></div>
 
-  <!-- Preloader Screen -->
+  <!-- Preloader Screen (Multi-Language "Hello" with Slats Shutter Reveal) -->
   <div id="preloader" class="preloader">
+    <!-- Vertical Shutter Slats Background -->
+    <div class="preloader-slats" aria-hidden="true">
+      <div class="preloader-slat"></div>
+      <div class="preloader-slat"></div>
+      <div class="preloader-slat"></div>
+      <div class="preloader-slat"></div>
+      <div class="preloader-slat"></div>
+      <div class="preloader-slat"></div>
+    </div>
+
+    <!-- Preloader Content Layer -->
     <div class="preloader-content">
-      <div class="preloader-brand">TUSHIT AUDI</div>
-      <div class="preloader-sub">WEB DEV THAT MOVES WITH YOU.</div>
-      <div class="preloader-progress-wrapper">
-        <div id="preloader-bar" class="preloader-bar"></div>
-      </div>
-      <div id="preloader-percent" class="preloader-percent">00%</div>
-      <div class="preloader-status">PRELOADING HIGH-RES ROTATION FRAMES...</div>
+      <p id="preloader-text" class="preloader-text">Hello</p>
     </div>
   </div>
 
@@ -56,7 +61,7 @@
             <div class="nav-links">
               <a href="#work" class="nav-link"><span class="nav-num">01</span> WORK</a>
               <a href="#about" class="nav-link"><span class="nav-num">02</span> ABOUT</a>
-              <a href="#services" class="nav-link"><span class="nav-num">03</span> SERVICES</a>
+              <a href="#services" class="nav-link"><span class="nav-num">03</span> HOW WE WORK</a>
               <a href="#contact" class="nav-link"><span class="nav-num">04</span> CONTACT</a>
             </div>
           </div>
@@ -73,14 +78,9 @@
             <div class="hero-left-col">
               <div class="hero-name-block">
                 <h1 class="hero-name-title">
-                  <span class="name-line">TUSHIT</span>
-                  <span class="name-line">AUDI</span>
+                  <span class="name-mask"><span class="name-line">TUSHIT</span></span>
+                  <span class="name-mask"><span class="name-line">AUDI</span></span>
                 </h1>
-                <div class="hero-role-tag">
-                  <span>WEB DEVELOPER</span>
-                  <span class="role-sep">&#x2196;</span>
-                  <span>AUTOMATION SPECIALIST</span>
-                </div>
               </div>
 
               <!-- Action CTAs Stacked in Left Column -->
@@ -119,10 +119,10 @@
                     <span class="cap-label">APPS</span>
                   </div>
                   <div class="capability-item" data-threshold="0.65">
-                    <span class="cap-label">INTERACTIVE & MINIMAL DESIGN</span>
+                    <span class="cap-label">INTERACTION DESIGN</span>
                   </div>
                   <div class="capability-item" data-threshold="0.80">
-                    <span class="cap-label">GOOGLE RANKING & GROWTH MARKETING</span>
+                    <span class="cap-label">SEO & GROWTH</span>
                   </div>
                 </div>
               </div>
@@ -157,7 +157,7 @@
     <!-- 4 FULL-VIEWPORT EDITORIAL PAGES WRAPPER -->
     <div class="pages-wrapper">
       
-      <!-- PAGE 1: ABOUT ME -->
+      <!-- PAGE 1: ABOUT ME (BENTO GRID LAYOUT) -->
       <section id="about" class="editorial-section about-section full-page-section">
         <div class="section-container">
           
@@ -166,252 +166,282 @@
             <div class="eyebrow-line"></div>
           </div>
 
-          <div class="about-grid">
-            <!-- Left Column: Realistic Interactive CLI Terminal Window -->
-            <div class="about-terminal-wrapper">
-              <div class="terminal-card">
-                <!-- macOS Window Header Bar -->
-                <div class="terminal-header">
-                  <div class="terminal-dots">
-                    <span class="dot dot-red"></span>
-                    <span class="dot dot-yellow"></span>
-                    <span class="dot dot-green"></span>
-                  </div>
-                  <div class="terminal-title">zsh — tushit@talisman-mbp:~</div>
-                  <div class="terminal-actions">
-                    <span class="terminal-badge"><span class="status-indicator"></span> LIVE SESSION</span>
-                  </div>
+          <h2 class="section-display-title">ENGINEERED FOR IMPACT.</h2>
+
+          <div class="bento-about-grid">
+            
+            <!-- CARD 1: PROFILE & BIO -->
+            <article class="bento-card bento-card-profile">
+              <div class="bento-profile-header">
+                <div class="bento-avatar">
+                  <span>TA</span>
                 </div>
-
-                <!-- Quick Command Trigger Chips -->
-                <div class="terminal-quick-chips">
-                  <button type="button" class="chip-btn" data-cmd="help">&gt; help</button>
-                  <button type="button" class="chip-btn" data-cmd="about">&gt; about</button>
-                  <button type="button" class="chip-btn" data-cmd="skills">&gt; skills</button>
-                  <button type="button" class="chip-btn" data-cmd="stack">&gt; stack</button>
-                  <button type="button" class="chip-btn" data-cmd="n8n">&gt; n8n</button>
-                  <button type="button" class="chip-btn" data-cmd="clear">&gt; clear</button>
-                </div>
-
-                <!-- Terminal Code / Command Body -->
-                <div class="terminal-body" id="terminal-body-output">
-                  <div class="term-line term-comment">// Initializing vibe coding & automation engine...</div>
-                  
-                  <div class="term-line">
-                    <span class="term-prompt">$</span>
-                    <span class="term-cmd">n8n</span>
-                    <span class="term-flag">start</span>
-                    <span class="term-arg">--workflow=ai_agent_router</span>
-                  </div>
-                  <div class="term-line term-out term-info">[INFO] Webhook listener active on port 5678</div>
-                  <div class="term-line term-out term-success">[OK] Connected to PostgreSQL & OpenAI API</div>
-
-                  <div class="term-line term-space"></div>
-
-                  <div class="term-line">
-                    <span class="term-prompt">$</span>
-                    <span class="term-cmd">agy</span>
-                    <span class="term-flag">dev</span>
-                    <span class="term-arg">--build-target=production</span>
-                  </div>
-                  <div class="term-line term-out term-info">[BUILD] Compiling Vite + GSAP + Tailwind modules...</div>
-                  <div class="term-line term-out term-success">[OK] Build finished in 89ms ⚡</div>
-
-                  <div class="term-line term-space"></div>
-
-                  <div class="term-line">
-                    <span class="term-prompt">$</span>
-                    <span class="term-cmd">docker</span>
-                    <span class="term-flag">ps</span>
-                    <span class="term-arg">--format="table {{.Names}}\t{{.Status}}"</span>
-                  </div>
-                  <div class="term-line term-out term-output">CONTAINER            STATUS</div>
-                  <div class="term-line term-out term-success">n8n-automation       Up 14 days (healthy)</div>
-                  <div class="term-line term-out term-success">ai-agent-service     Up 3 days (active)</div>
-
-                  <div class="term-line term-space"></div>
-
-                  <div class="term-line">
-                    <span class="term-prompt">$</span>
-                    <span class="term-cmd">echo</span>
-                    <span class="term-str">"Ship fast. Build real products."</span>
-                  </div>
-                  <div class="term-line term-out term-str">&gt; Ship fast. Build real products.</div>
-
-                  <div class="term-line term-comment">// Click chips above or type a command below (try 'help'):</div>
-
-                  <!-- Dynamic Terminal Input Line -->
-                  <div class="term-line term-input-line">
-                    <span class="term-prompt">$</span>
-                    <input type="text" id="terminal-input" class="term-input" placeholder="type 'help'..." spellcheck="false" autocomplete="off" />
-                    <span class="term-cursor">█</span>
-                  </div>
+                <div class="bento-profile-meta">
+                  <h3 class="bento-author-name">Tushit Audi</h3>
                 </div>
               </div>
-              <div class="terminal-caption">TUSHIT AUDI — DEV & AUTOMATION ENVIRONMENT</div>
-            </div>
-
-            <!-- Right Column: Biography, Proof Stats & Tech Ecosystem -->
-            <div class="about-content">
-              <h2 class="about-heading">Tushit Audi</h2>
-              
-              <p class="about-bio">
+              <p class="bento-profile-bio">
                 I'm a builder who leverages AI-assisted development and workflow automation to ship real, production-grade web applications at lightspeed. From sleek user interfaces to complex background automations, I focus on shipping software that drives real impact.
               </p>
+            </article>
 
-              <!-- Vibe Coding Philosophy Quote Card -->
-              <div class="about-quote-card">
-                <span class="quote-tag">THE VIBE CODING MINDSET</span>
-                <p class="quote-text">"Websites that look elite. Workflows that run on autopilot. I build the digital engine your business runs on."</p>
+            <!-- CARD 2: FLEXIBLE WITH TIMEZONES & DOTTED GLOBE -->
+            <article class="bento-card bento-card-globe">
+              <div class="bento-card-eyebrow">FLEXIBLE WITH TIMEZONES</div>
+              <h3 class="bento-card-title">Based in Hubli, <span class="text-muted-inline">available globally.</span></h3>
+              <div class="bento-globe-wrapper">
+                <canvas id="bento-globe-canvas" width="280" height="280"></canvas>
               </div>
+            </article>
 
-              <!-- High Impact Key Metrics Grid -->
-              <div class="about-stats-grid">
-                <div class="stat-card">
-                  <div class="stat-number" data-target="10">10x</div>
-                  <div class="stat-label">Shipping Velocity</div>
-                </div>
-                <div class="stat-card">
-                  <div class="stat-number" data-target="50">50+</div>
-                  <div class="stat-label">Automated Workflows</div>
-                </div>
-                <div class="stat-card">
-                  <div class="stat-number" data-target="100">100%</div>
-                  <div class="stat-label">Production Ready</div>
-                </div>
+            <!-- CARD 3: SERVICES & CAPABILITIES -->
+            <article class="bento-card bento-card-services">
+              <div class="bento-card-header-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                  <polyline points="2 17 12 22 22 17"></polyline>
+                  <polyline points="2 12 12 17 22 12"></polyline>
+                </svg>
+                <span class="bento-card-eyebrow-text">WHAT CAN I DO FOR YOU</span>
               </div>
-
-              <!-- Tech Ecosystem Pills -->
-              <div class="about-tech-group">
-                <div class="tech-category">
-                  <span class="tech-cat-label">FRONTEND & UI</span>
-                  <div class="tech-pills">
-                    <span class="tech-pill">REACT</span>
-                    <span class="tech-pill">NEXT.JS</span>
-                    <span class="tech-pill">VITE</span>
-                    <span class="tech-pill">GSAP</span>
-                    <span class="tech-pill">VANILLA CSS</span>
-                  </div>
+              <div class="bento-services-list">
+                <div class="bento-service-item">
+                  <span class="bento-service-num">01</span>
+                  <span class="bento-service-name">WEB DEVELOPMENT</span>
                 </div>
-                <div class="tech-category">
-                  <span class="tech-cat-label">AUTOMATION & BACKEND</span>
-                  <div class="tech-pills">
-                    <span class="tech-pill">N8N</span>
-                    <span class="tech-pill">WEBHOOKS</span>
-                    <span class="tech-pill">NODE.JS</span>
-                    <span class="tech-pill">REST APIs</span>
-                    <span class="tech-pill">POSTGRESQL</span>
-                  </div>
+                <div class="bento-service-item">
+                  <span class="bento-service-num">02</span>
+                  <span class="bento-service-name">AUTOMATION WORKFLOW</span>
+                </div>
+                <div class="bento-service-item">
+                  <span class="bento-service-num">03</span>
+                  <span class="bento-service-name">FULL-STACK SOLUTIONS</span>
+                </div>
+                <div class="bento-service-item">
+                  <span class="bento-service-num">04</span>
+                  <span class="bento-service-name">MOBILE APPS</span>
+                </div>
+                <div class="bento-service-item">
+                  <span class="bento-service-num">05</span>
+                  <span class="bento-service-name">GOOGLE RANKING & GROWTH</span>
                 </div>
               </div>
+            </article>
 
-              <div class="about-meta-group">
-                <div class="about-status-location">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                    <circle cx="12" cy="10" r="3"></circle>
+            <!-- CARD 4: AVAILABILITY & CTA -->
+            <article class="bento-card bento-card-cta">
+              <div class="bento-status-pill">
+                <span class="status-dot"></span>
+                <span>AVAILABLE FOR 2026 PROJECTS</span>
+              </div>
+              <h3 class="bento-cta-headline">GOT AN IDEA?<br><span class="bento-cta-accent">LET'S SHIP IT.</span></h3>
+              <p class="bento-cta-sub">Turning complex ideas into production-ready software.</p>
+              <div class="bento-cta-actions">
+                <a href="#contact" class="btn-solid bento-btn-resume">
+                  <span>GET IN TOUCH</span>
+                  <svg class="btn-link-arrow" width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1 8H15M15 8L8 1M15 8L8 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
-                  <span>Based in Hubli, available globally</span>
-                </div>
-
-                <div class="availability-pill">
-                  <span class="pill-dot"></span>
-                  <span>OPEN TO FREELANCE & FULL-TIME</span>
-                </div>
+                </a>
               </div>
-            </div>
+            </article>
+
+            <!-- CARD 5: FLOATING ANALOG WATCH / CLOCK WIDGET -->
+            <article class="bento-card bento-card-clock" aria-label="Analog Watch Widget">
+              <div class="bento-clock-centerpiece" id="bento-clock-container"></div>
+            </article>
+
+            <!-- CARD 6: MINDSET QUOTE CARD -->
+            <article class="bento-card bento-card-quote">
+              <div class="bento-quote-watermark">“</div>
+              <p class="bento-quote-body">"You can't defeat a person who believes that even their failures are a blessing from God."</p>
+              <div class="bento-quote-author">— ANDREW TATE</div>
+            </article>
+
           </div>
 
         </div>
       </section>
 
-      <!-- PAGE 2: WHAT I CAN BUILD FOR YOU (SERVICES) -->
-      <section id="services" class="editorial-section services-section full-page-section">
+      <!-- PAGE 2: HOW WE WORK (PROCESS TIMELINE) -->
+      <section id="services" class="editorial-section process-section full-page-section">
         <div class="section-container">
           
-          <div class="eyebrow-container">
-            <span class="eyebrow-text">SERVICES</span>
-            <div class="eyebrow-line"></div>
-          </div>
+          <!-- Header -->
+          <header class="process-header">
+            <div class="eyebrow-container">
+              <span class="eyebrow-text">HOW WE WORK</span>
+              <div class="eyebrow-line"></div>
+            </div>
 
-          <h2 class="section-display-title">WHAT I CAN BUILD FOR YOU.</h2>
+            <div class="process-header-content">
+              <h2 class="section-display-title process-title">
+                IDEA TO LAUNCH.<br>ZERO PRESSURE.
+              </h2>
+              <p class="process-subheading">
+                A simple, transparent process built around you. You only move forward when you're ready.
+              </p>
+            </div>
+          </header>
 
-          <div class="services-list">
+          <!-- Process Timeline Container -->
+          <div class="process-timeline-wrapper" id="process-timeline-wrapper">
             
-            <div class="service-item">
-              <div class="service-num">01</div>
-              <div class="service-details">
-                <h3 class="service-name">Websites & Web Apps</h3>
-                <p class="service-desc">Modern, fast, responsive builds with tailored animations and seamless user experiences.</p>
-                <div class="service-tags">
-                  <span class="service-tag">REACT</span>
-                  <span class="service-tag">NEXT.JS</span>
-                  <span class="service-tag">VITE</span>
-                  <span class="service-tag">TAILWIND</span>
-                </div>
-              </div>
-              <div class="service-arrow">&rarr;</div>
-            </div>
+            <!-- SVG Path Track & Animated Progress Line -->
+            <svg class="process-line-svg" aria-hidden="true" preserveAspectRatio="none">
+              <path id="process-track-path" class="process-track-path" d="" />
+              <path id="process-progress-path" class="process-progress-path" d="" />
+              <circle id="process-head-glow" class="process-head-glow" r="14" cx="-100" cy="-100" />
+              <circle id="process-head-dot" class="process-head-dot" r="5" cx="-100" cy="-100" />
+            </svg>
 
-            <div class="service-item">
-              <div class="service-num">02</div>
-              <div class="service-details">
-                <h3 class="service-name">Workflow Automation</h3>
-                <p class="service-desc">n8n-powered automations that save hours of manual effort and streamline operations.</p>
-                <div class="service-tags">
-                  <span class="service-tag">N8N</span>
-                  <span class="service-tag">WEBHOOKS</span>
-                  <span class="service-tag">API INTEGRATION</span>
-                  <span class="service-tag">ZAPIER</span>
+            <ol class="process-steps-list">
+              <!-- Step 1 -->
+              <li class="process-step-item step-left" data-step="1">
+                <div class="process-numeral">01</div>
+                <div class="process-node-wrapper">
+                  <div class="process-node-ring"></div>
+                  <div class="process-node-dot"></div>
+                  <div class="process-connector"></div>
                 </div>
-              </div>
-              <div class="service-arrow">&rarr;</div>
-            </div>
+                <article class="process-card">
+                  <div class="process-card-header">
+                    <h3 class="process-card-title">Discovery Call</h3>
+                  </div>
+                  <p class="process-card-subtitle">A quick conversation to understand your vision.</p>
+                  <ul class="process-bullet-list">
+                    <li>
+                      <svg class="bullet-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                      <span>We listen and ask the right questions</span>
+                    </li>
+                    <li>
+                      <svg class="bullet-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                      <span>No pressure, no commitment</span>
+                    </li>
+                  </ul>
+                </article>
+              </li>
 
-            <div class="service-item">
-              <div class="service-num">03</div>
-              <div class="service-details">
-                <h3 class="service-name">Landing Pages</h3>
-                <p class="service-desc">Conversion-focused editorial pages designed and engineered to ship fast.</p>
-                <div class="service-tags">
-                  <span class="service-tag">EDITORIAL DESIGN</span>
-                  <span class="service-tag">GSAP</span>
-                  <span class="service-tag">SEO</span>
-                  <span class="service-tag">HIGH CONVERSION</span>
+              <!-- Step 2 -->
+              <li class="process-step-item step-right" data-step="2">
+                <div class="process-numeral">02</div>
+                <div class="process-node-wrapper">
+                  <div class="process-node-ring"></div>
+                  <div class="process-node-dot"></div>
+                  <div class="process-connector"></div>
                 </div>
-              </div>
-              <div class="service-arrow">&rarr;</div>
-            </div>
+                <article class="process-card">
+                  <div class="process-card-header">
+                    <h3 class="process-card-title">Zero-Pressure Consultation</h3>
+                  </div>
+                  <p class="process-card-subtitle">Honest feedback, no sales pitch.</p>
+                  <ul class="process-bullet-list">
+                    <li>
+                      <svg class="bullet-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                      <span>We tell you exactly what's possible</span>
+                    </li>
+                    <li>
+                      <svg class="bullet-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                      <span>Realistic scope, timeline and expectations</span>
+                    </li>
+                  </ul>
+                </article>
+              </li>
 
-            <div class="service-item">
-              <div class="service-num">04</div>
-              <div class="service-details">
-                <h3 class="service-name">Dashboards & Tools</h3>
-                <p class="service-desc">Internal tools, admin panels, and data management interfaces built around your workflow.</p>
-                <div class="service-tags">
-                  <span class="service-tag">ADMIN PANELS</span>
-                  <span class="service-tag">DATA VISUALIZATION</span>
-                  <span class="service-tag">REST APIS</span>
+              <!-- Step 3 (With Badge) -->
+              <li class="process-step-item step-left" data-step="3">
+                <div class="process-numeral">03</div>
+                <div class="process-node-wrapper">
+                  <div class="process-node-ring"></div>
+                  <div class="process-node-dot"></div>
+                  <div class="process-connector"></div>
                 </div>
-              </div>
-              <div class="service-arrow">&rarr;</div>
-            </div>
+                <article class="process-card">
+                  <div class="process-card-header">
+                    <h3 class="process-card-title">Free Custom Prototype</h3>
+                    <span class="process-badge">24 HRS · FREE</span>
+                  </div>
+                  <p class="process-card-subtitle">See your idea come to life.</p>
+                  <ul class="process-bullet-list">
+                    <li>
+                      <svg class="bullet-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                      <span>Delivered within 24 hours</span>
+                    </li>
+                    <li>
+                      <svg class="bullet-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                      <span>Completely free to review</span>
+                    </li>
+                  </ul>
+                </article>
+              </li>
 
-            <div class="service-item">
-              <div class="service-num">05</div>
-              <div class="service-details">
-                <h3 class="service-name">Rapid Prototyping</h3>
-                <p class="service-desc">AI-assisted builds to validate product ideas and launch MVPs quickly.</p>
-                <div class="service-tags">
-                  <span class="service-tag">AI-ASSISTED DEV</span>
-                  <span class="service-tag">MVP LAUNCH</span>
-                  <span class="service-tag">FAST ITERATION</span>
+              <!-- Step 4 -->
+              <li class="process-step-item step-right" data-step="4">
+                <div class="process-numeral">04</div>
+                <div class="process-node-wrapper">
+                  <div class="process-node-ring"></div>
+                  <div class="process-node-dot"></div>
+                  <div class="process-connector"></div>
                 </div>
-              </div>
-              <div class="service-arrow">&rarr;</div>
+                <article class="process-card">
+                  <div class="process-card-header">
+                    <h3 class="process-card-title">You Decide</h3>
+                  </div>
+                  <p class="process-card-subtitle">No obligations, no questions asked.</p>
+                  <ul class="process-bullet-list">
+                    <li>
+                      <svg class="bullet-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                      <span>Not right? We part ways professionally</span>
+                    </li>
+                    <li>
+                      <svg class="bullet-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                      <span>Love it? We move forward together</span>
+                    </li>
+                  </ul>
+                </article>
+              </li>
+
+              <!-- Step 5 (With Badge) -->
+              <li class="process-step-item step-left" data-step="5">
+                <div class="process-numeral">05</div>
+                <div class="process-node-wrapper">
+                  <div class="process-node-ring"></div>
+                  <div class="process-node-dot"></div>
+                  <div class="process-connector"></div>
+                </div>
+                <article class="process-card">
+                  <div class="process-card-header">
+                    <h3 class="process-card-title">Full Delivery</h3>
+                    <span class="process-badge">5 DAYS</span>
+                  </div>
+                  <p class="process-card-subtitle">Your complete website, fully functional.</p>
+                  <ul class="process-bullet-list">
+                    <li>
+                      <svg class="bullet-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                      <span>Built and launched in 5 days</span>
+                    </li>
+                    <li>
+                      <svg class="bullet-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                      <span>Ready for real customers from day one</span>
+                    </li>
+                  </ul>
+                </article>
+              </li>
+            </ol>
+
+            <!-- Closing CTA Block -->
+            <div class="process-cta-block" id="process-cta-block">
+              <h3 class="process-cta-title">Ready to see your idea live?</h3>
+              <a href="#contact" class="btn-solid process-cta-btn">
+                <span>BOOK A DISCOVERY CALL</span>
+                <svg class="btn-link-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path d="M1 8H15M15 8L8 1M15 8L8 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </a>
             </div>
 
           </div>
+
         </div>
       </section>
 

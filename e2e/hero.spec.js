@@ -46,30 +46,42 @@ test.describe('Portfolio Website E2E Tests', () => {
     expect(consoleErrors).toEqual([]);
   });
 
-  test('should render About Me section and interactive CLI terminal', async ({ page }) => {
+  test('should render About Me section with 6-card Bento grid and interactive widgets', async ({ page }) => {
     await page.goto('http://127.0.0.1:3000/');
+    await page.waitForTimeout(3000); // Wait for preloader
 
-    const aboutHeading = page.locator('.about-heading');
-    await expect(aboutHeading).toHaveText('Tushit Audi');
+    const authorName = page.locator('.bento-author-name');
+    await expect(authorName).toHaveText('Tushit Audi');
 
-    // Test terminal chips
-    const skillsChip = page.locator('.chip-btn[data-cmd="skills"]');
-    await skillsChip.click();
+    // Verify 6 Bento Cards rendered
+    const bentoCards = page.locator('.bento-card');
+    await expect(bentoCards).toHaveCount(6);
 
-    // Verify terminal output line rendered
-    const terminalOutput = page.locator('#terminal-body-output');
-    await expect(terminalOutput).toContainText('⚡ Web Apps');
+    // Verify interactive Globe and Clock canvases are present
+    const globeCanvas = page.locator('#bento-globe-canvas');
+    await expect(globeCanvas).toBeVisible();
+
+    const clockCanvas = page.locator('#bento-clock-canvas');
+    await expect(clockCanvas).toBeVisible();
+
+    const aboutSection = page.locator('#about');
+    await aboutSection.scrollIntoViewIfNeeded();
+    await page.waitForTimeout(1000);
+    await page.screenshot({ path: '/Users/tushitaudi/.gemini/antigravity-ide/brain/db3a0093-148b-4df5-8e25-f903bf6f4eeb/bento_about_screenshot.png', fullPage: false });
 
     // Verify zero JavaScript page errors
     expect(consoleErrors).toEqual([]);
   });
 
-  test('should render Services, Work, and Contact sections', async ({ page }) => {
+  test('should render How We Work process timeline, Work, and Contact sections', async ({ page }) => {
     await page.goto('http://127.0.0.1:3000/');
 
-    // Services
-    const servicesTitle = page.locator('#services .section-display-title');
-    await expect(servicesTitle).toHaveText('WHAT I CAN BUILD FOR YOU.');
+    // How We Work (Process Timeline)
+    const processTitle = page.locator('#services .section-display-title');
+    await expect(processTitle).toContainText('From idea to launch — without the pressure.');
+
+    const processSteps = page.locator('.process-step-item');
+    await expect(processSteps).toHaveCount(5);
 
     // Work
     const workTitle = page.locator('#work .section-display-title');
