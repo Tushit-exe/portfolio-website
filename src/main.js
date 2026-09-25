@@ -731,6 +731,142 @@ function initCopyrightYear() {
   }
 }
 
+/* ==========================================================================
+   CONTACT MODAL, FORM VALIDATION, SPAM PROTECTION & COOKIE BANNER
+   ========================================================================== */
+
+function initContactModal() {
+  const openBtn = document.getElementById('btn-open-contact-modal');
+  const modal = document.getElementById('contact-modal');
+  const closeBtn = document.getElementById('modal-close-btn');
+  const form = document.getElementById('contact-form');
+
+  if (!openBtn || !modal || !form) return;
+
+  const openModal = () => {
+    modal.classList.add('is-active');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeModal = () => {
+    modal.classList.remove('is-active');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  };
+
+  openBtn.addEventListener('click', openModal);
+  if (closeBtn) closeBtn.addEventListener('click', closeModal);
+
+  // Close modal on background overlay click
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+  });
+
+  // Client-side Validation & Spam Honeypot Handler
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    // 1. Spam Honeypot Protection Check
+    const hpField = document.getElementById('b_website_hp');
+    if (hpField && hpField.value) {
+      // Silent rejection for bots
+      closeModal();
+      form.reset();
+      return;
+    }
+
+    const nameInput = document.getElementById('form-name');
+    const emailInput = document.getElementById('form-email');
+    const messageInput = document.getElementById('form-message');
+
+    const nameErr = document.getElementById('name-error');
+    const emailErr = document.getElementById('email-error');
+    const messageErr = document.getElementById('message-error');
+
+    let isValid = true;
+
+    // Reset errors
+    [nameInput, emailInput, messageInput].forEach(el => el && el.classList.remove('has-error'));
+    if (nameErr) nameErr.textContent = '';
+    if (emailErr) emailErr.textContent = '';
+    if (messageErr) messageErr.textContent = '';
+
+    // Validate Name
+    if (!nameInput.value.trim()) {
+      if (nameErr) nameErr.textContent = 'Please enter your name.';
+      nameInput.classList.add('has-error');
+      isValid = false;
+    }
+
+    // Validate Email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailInput.value.trim() || !emailRegex.test(emailInput.value.trim())) {
+      if (emailErr) emailErr.textContent = 'Please enter a valid email address.';
+      emailInput.classList.add('has-error');
+      isValid = false;
+    }
+
+    // Validate Message
+    if (!messageInput.value.trim() || messageInput.value.trim().length < 5) {
+      if (messageErr) messageErr.textContent = 'Please provide details about your project (at least 5 chars).';
+      messageInput.classList.add('has-error');
+      isValid = false;
+    }
+
+    if (!isValid) return;
+
+    // Direct mailto fallback or simulated instant submission
+    const mailtoUrl = `mailto:tushitaudi@gmail.com?subject=Portfolio%20Inquiry%20from%20${encodeURIComponent(nameInput.value)}&body=${encodeURIComponent(messageInput.value)}`;
+    window.location.href = mailtoUrl;
+
+    showToast('Message prepared! Email client launched.', 'success');
+    closeModal();
+    form.reset();
+  });
+}
+
+function initCookieBanner() {
+  const banner = document.getElementById('cookie-banner');
+  const acceptBtn = document.getElementById('btn-cookie-accept');
+  const declineBtn = document.getElementById('btn-cookie-decline');
+
+  if (!banner) return;
+
+  const cookieChoice = localStorage.getItem('ta_cookie_consent');
+  if (!cookieChoice) {
+    setTimeout(() => {
+      banner.classList.add('is-visible');
+    }, 2000);
+  }
+
+  if (acceptBtn) {
+    acceptBtn.addEventListener('click', () => {
+      localStorage.setItem('ta_cookie_consent', 'accepted');
+      banner.classList.remove('is-visible');
+      showToast('Cookie preferences saved.', 'success');
+    });
+  }
+
+  if (declineBtn) {
+    declineBtn.addEventListener('click', () => {
+      localStorage.setItem('ta_cookie_consent', 'declined');
+      banner.classList.remove('is-visible');
+      showToast('Non-essential analytics disabled.', 'success');
+    });
+  }
+}
+
+function initAnalytics() {
+  if (navigator.doNotTrack === '1') return;
+  const consent = localStorage.getItem('ta_cookie_consent');
+  if (consent === 'declined') return;
+
+  if (window.gtag) {
+    window.gtag('event', 'page_view', { page_title: document.title });
+  }
+}
+
 // Initialize preloader sequence on DOM ready
 document.addEventListener('DOMContentLoaded', () => {
   window.scrollTo(0, 0);
@@ -744,6 +880,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initMobileMenu();
   initCopyEmail();
   initCopyrightYear();
+  initContactModal();
+  initCookieBanner();
+  initAnalytics();
 });
 
 /* ==========================================================================

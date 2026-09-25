@@ -11,9 +11,11 @@
   <meta property="og:description" content="Custom web applications, n8n workflow automations, SaaS platforms, and mobile apps engineered for impact.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://tushitaudi.com">
+  <meta property="og:image" content="https://tushitaudi.com/assets/og-image.png">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Tushit Audi — Web Developer &amp; Automation Specialist">
   <meta name="twitter:description" content="Custom web applications, n8n workflow automations, SaaS platforms, and mobile apps engineered for impact.">
+  <meta name="twitter:image" content="https://tushitaudi.com/assets/og-image.png">
 
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -24,8 +26,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
   
-  <script type="module" crossorigin src="/assets/index-NPJHjSWQ.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-BFmd24ZJ.css">
+  <script type="module" crossorigin src="/assets/index-CYgDv8c0.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-B4UgmMr1.css">
 </head>
 <body class="editorial-theme">
 
@@ -597,12 +599,12 @@
             <p class="contact-subtext">Have a web project, landing page, or workflow automation in mind? Let's turn ideas into high-performance software.</p>
             
             <div class="contact-btn-row">
-              <a href="mailto:tushitaudi@gmail.com" class="btn-solid btn-contact-lg">
+              <button id="btn-open-contact-modal" class="btn-solid btn-contact-lg" aria-label="Open contact form">
                 <span>GET IN TOUCH</span>
                 <svg class="btn-link-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M1 8H15M15 8L8 1M15 8L8 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-              </a>
+              </button>
               <button id="btn-copy-email" class="btn-outline btn-contact-lg" aria-label="Copy email address to clipboard">
                 <span>COPY EMAIL</span>
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -618,6 +620,8 @@
               <a href="https://github.com/Tushit-exe" target="_blank" rel="noopener" class="footer-social-link">GITHUB</a>
               <a href="https://linkedin.com/in/tushitaudi" target="_blank" rel="noopener" class="footer-social-link">LINKEDIN</a>
               <a href="mailto:tushitaudi@gmail.com" class="footer-social-link">EMAIL</a>
+              <a href="/privacy.html" class="footer-social-link">PRIVACY</a>
+              <a href="/terms.html" class="footer-social-link">TERMS</a>
             </div>
             <div class="footer-copy">
               &copy; <span id="copyright-year">2026</span> TUSHIT AUDI. ALL RIGHTS RESERVED.
@@ -630,6 +634,58 @@
     </div>
 
   </main>
+
+  <!-- Interactive Contact Form Modal (with Client Validation & Honeypot Anti-Spam) -->
+  <div id="contact-modal" class="modal-overlay" aria-hidden="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">SEND A MESSAGE</h3>
+        <button id="modal-close-btn" class="modal-close" aria-label="Close modal">&times;</button>
+      </div>
+      <form id="contact-form" class="modal-form" novalidate>
+        <!-- Honeypot Anti-Spam Field (hidden from real users) -->
+        <input type="text" name="b_website_hp" id="b_website_hp" style="display:none !important;" tabindex="-1" autocomplete="off">
+
+        <div class="form-group">
+          <label for="form-name" class="form-label">YOUR NAME *</label>
+          <input type="text" id="form-name" name="name" class="form-input" placeholder="e.g. Alex Johnson" required>
+          <span class="form-error-text" id="name-error"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="form-email" class="form-label">EMAIL ADDRESS *</label>
+          <input type="email" id="form-email" name="email" class="form-input" placeholder="alex@company.com" required>
+          <span class="form-error-text" id="email-error"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="form-message" class="form-label">PROJECT DETAILS *</label>
+          <textarea id="form-message" name="message" class="form-input form-textarea" rows="4" placeholder="Tell me about your website or automation project..." required></textarea>
+          <span class="form-error-text" id="message-error"></span>
+        </div>
+
+        <button type="submit" class="btn-solid btn-submit-form">
+          <span>SEND MESSAGE</span>
+          <svg class="btn-link-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M1 8H15M15 8L8 1M15 8L8 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Cookie Consent Banner -->
+  <div id="cookie-banner" class="cookie-banner" aria-live="polite">
+    <div class="cookie-banner-content">
+      <p class="cookie-banner-text">
+        We use essential cookies and privacy-friendly analytics to enhance site performance.
+      </p>
+      <div class="cookie-banner-actions">
+        <button id="btn-cookie-decline" class="cookie-btn cookie-decline">DECLINE</button>
+        <button id="btn-cookie-accept" class="cookie-btn cookie-accept">ACCEPT</button>
+      </div>
+    </div>
+  </div>
 
 </body>
 </html>
