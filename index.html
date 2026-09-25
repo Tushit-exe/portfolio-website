@@ -3,8 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>How We Work | Tushit Audi — Web Developer & Automation Specialist</title>
-  <meta name="description" content="From a free discovery call to a fully launched website in 5 days — no pressure, no obligations.">
+  <title>Tushit Audi — Web Developer &amp; Automation Specialist</title>
+  <meta name="description" content="Tushit Audi is a Web Developer &amp; Automation Specialist building high-performance web applications, n8n workflow automations, SaaS platforms, and mobile apps.">
+  
+  <!-- OpenGraph & Social Metadata -->
+  <meta property="og:title" content="Tushit Audi — Web Developer &amp; Automation Specialist">
+  <meta property="og:description" content="Custom web applications, n8n workflow automations, SaaS platforms, and mobile apps engineered for impact.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://tushitaudi.com">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Tushit Audi — Web Developer &amp; Automation Specialist">
+  <meta name="twitter:description" content="Custom web applications, n8n workflow automations, SaaS platforms, and mobile apps engineered for impact.">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="alternate icon" href="/favicon.svg">
   
   <!-- Google Fonts: Syne (Editorial/Fashion display) & Inter (Minimal Body/Labels) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,6 +30,26 @@
 
   <!-- Matte Grain Texture Overlay -->
   <div class="grain-overlay" aria-hidden="true"></div>
+
+  <!-- Toast Feedback Container for Success/Error Notifications -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- Mobile Navigation Drawer Overlay -->
+  <div id="mobile-menu-drawer" class="mobile-menu-drawer" aria-hidden="true">
+    <div class="mobile-drawer-header">
+      <a href="#hero-viewport" class="mobile-drawer-logo">TA</a>
+      <button id="mobile-menu-close" class="mobile-menu-close" aria-label="Close menu">&times;</button>
+    </div>
+    <nav class="mobile-drawer-nav">
+      <a href="#work" class="mobile-drawer-link"><span class="nav-num">01</span> WORK</a>
+      <a href="#about" class="mobile-drawer-link"><span class="nav-num">02</span> ABOUT</a>
+      <a href="#services" class="mobile-drawer-link"><span class="nav-num">03</span> HOW WE WORK</a>
+      <a href="#contact" class="mobile-drawer-link"><span class="nav-num">04</span> CONTACT</a>
+    </nav>
+    <div class="mobile-drawer-footer">
+      <a href="mailto:tushitaudi@gmail.com" class="mobile-drawer-email">tushitaudi@gmail.com</a>
+    </div>
+  </div>
 
   <!-- Preloader Screen (Multi-Language "Hello" with Slats Shutter Reveal) -->
   <div id="preloader" class="preloader">
@@ -50,20 +83,26 @@
           <div class="top-nav-container">
             <!-- Top-Left Header Group: TA Logo + Status Dot + Available for 2026 Projects -->
             <div class="nav-brand-group">
-              <a href="#" class="nav-logo">TA</a>
+              <a href="#hero-viewport" id="nav-logo" class="nav-logo" aria-label="Tushit Audi Portfolio Home">TA</a>
               <div class="nav-status-badge">
                 <span class="status-dot"></span>
                 <span class="nav-status-text">AVAILABLE FOR 2026 PROJECTS</span>
               </div>
             </div>
 
-            <!-- Top-Right Navigation Links -->
+            <!-- Top-Right Navigation Links (Desktop) -->
             <div class="nav-links">
               <a href="#work" class="nav-link"><span class="nav-num">01</span> WORK</a>
               <a href="#about" class="nav-link"><span class="nav-num">02</span> ABOUT</a>
               <a href="#services" class="nav-link"><span class="nav-num">03</span> HOW WE WORK</a>
               <a href="#contact" class="nav-link"><span class="nav-num">04</span> CONTACT</a>
             </div>
+
+            <!-- Mobile Hamburger Toggle Button -->
+            <button id="mobile-menu-toggle" class="mobile-menu-toggle" aria-label="Toggle navigation menu">
+              <span></span>
+              <span></span>
+            </button>
           </div>
         </nav>
         <div class="hero-canvas-wrapper" id="hero-canvas-wrapper">
@@ -556,22 +595,31 @@
             <h2 class="contact-display-headline">LET'S BUILD SOMETHING REAL.</h2>
             <p class="contact-subtext">Have a web project, landing page, or workflow automation in mind? Let's turn ideas into high-performance software.</p>
             
-            <a href="mailto:tushitaudi@gmail.com" class="btn-solid btn-contact-lg">
-              <span>GET IN TOUCH</span>
-              <svg class="btn-link-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M1 8H15M15 8L8 1M15 8L8 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </a>
+            <div class="contact-btn-row">
+              <a href="mailto:tushitaudi@gmail.com" class="btn-solid btn-contact-lg">
+                <span>GET IN TOUCH</span>
+                <svg class="btn-link-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M1 8H15M15 8L8 1M15 8L8 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </a>
+              <button id="btn-copy-email" class="btn-outline btn-contact-lg" aria-label="Copy email address to clipboard">
+                <span>COPY EMAIL</span>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+              </button>
+            </div>
           </div>
 
           <footer class="footer-bar">
             <div class="footer-socials">
-              <a href="https://github.com" target="_blank" rel="noopener" class="footer-social-link">GITHUB</a>
-              <a href="https://linkedin.com" target="_blank" rel="noopener" class="footer-social-link">LINKEDIN</a>
+              <a href="https://github.com/Tushit-exe" target="_blank" rel="noopener" class="footer-social-link">GITHUB</a>
+              <a href="https://linkedin.com/in/tushitaudi" target="_blank" rel="noopener" class="footer-social-link">LINKEDIN</a>
               <a href="mailto:tushitaudi@gmail.com" class="footer-social-link">EMAIL</a>
             </div>
             <div class="footer-copy">
-              &copy; 2026 TUSHIT AUDI. ALL RIGHTS RESERVED.
+              &copy; <span id="copyright-year">2026</span> TUSHIT AUDI. ALL RIGHTS RESERVED.
             </div>
           </footer>
 

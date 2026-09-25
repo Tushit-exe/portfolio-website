@@ -640,6 +640,97 @@ function initStatCounters() {
   if (aboutSection) observer.observe(aboutSection);
 }
 
+/* ==========================================================================
+   TOAST NOTIFICATION SYSTEM & UTILITIES (ITEMS 9, 11, 12, 13, 17)
+   ========================================================================== */
+
+function showToast(message, type = 'success') {
+  const container = document.getElementById('toast-container');
+  if (!container) return;
+
+  const toast = document.createElement('div');
+  toast.className = `toast-message toast-${type}`;
+  
+  const iconSVG = type === 'success'
+    ? `<svg class="toast-icon-success" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`
+    : `<svg class="toast-icon-error" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`;
+
+  toast.innerHTML = `${iconSVG}<span>${message}</span>`;
+  container.appendChild(toast);
+
+  // Force DOM reflow to trigger CSS animation
+  void toast.offsetWidth;
+  toast.classList.add('is-visible');
+
+  setTimeout(() => {
+    toast.classList.remove('is-visible');
+    setTimeout(() => toast.remove(), 300);
+  }, 3500);
+}
+
+function initCopyEmail() {
+  const copyBtn = document.getElementById('btn-copy-email');
+  if (!copyBtn) return;
+
+  copyBtn.addEventListener('click', () => {
+    const email = 'tushitaudi@gmail.com';
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(email).then(() => {
+        showToast('Email copied to clipboard! (tushitaudi@gmail.com)', 'success');
+      }).catch(() => {
+        showToast('Direct email: tushitaudi@gmail.com', 'success');
+      });
+    } else {
+      showToast('Direct email: tushitaudi@gmail.com', 'success');
+    }
+  });
+}
+
+function initMobileMenu() {
+  const toggleBtn = document.getElementById('mobile-menu-toggle');
+  const closeBtn = document.getElementById('mobile-menu-close');
+  const drawer = document.getElementById('mobile-menu-drawer');
+  const drawerLinks = document.querySelectorAll('.mobile-drawer-link, .mobile-drawer-logo');
+
+  if (!toggleBtn || !drawer) return;
+
+  const openDrawer = () => {
+    drawer.classList.add('is-open');
+    drawer.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeDrawer = () => {
+    drawer.classList.remove('is-open');
+    drawer.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  };
+
+  toggleBtn.addEventListener('click', openDrawer);
+  if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+
+  drawerLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      closeDrawer();
+      const href = link.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        e.preventDefault();
+        const targetEl = document.querySelector(href);
+        if (targetEl) {
+          targetEl.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    });
+  });
+}
+
+function initCopyrightYear() {
+  const yearEl = document.getElementById('copyright-year');
+  if (yearEl) {
+    yearEl.textContent = new Date().getFullYear();
+  }
+}
+
 // Initialize preloader sequence on DOM ready
 document.addEventListener('DOMContentLoaded', () => {
   window.scrollTo(0, 0);
@@ -650,6 +741,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initDottedGlobe();
   initAnalogClock();
   initProcessTimeline();
+  initMobileMenu();
+  initCopyEmail();
+  initCopyrightYear();
 });
 
 /* ==========================================================================
