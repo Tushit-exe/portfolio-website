@@ -408,15 +408,8 @@ function updateSkillReveals(progress) {
   const capabilityItems = document.querySelectorAll('.capability-item, .skill-item');
   if (!capabilityItems.length) return;
 
-  const isMobile = window.innerWidth < 768;
-
   capabilityItems.forEach((item) => {
-    const threshold = parseFloat(item.dataset.threshold || '0');
-    if (isMobile || progress >= threshold || (progress === 0 && threshold <= 0.20)) {
-      item.classList.add('is-revealed');
-    } else {
-      item.classList.remove('is-revealed');
-    }
+    item.classList.add('is-revealed');
   });
 }
 

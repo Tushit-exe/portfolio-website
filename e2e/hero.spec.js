@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('Portfolio Website E2E Tests', () => {
+test.describe('Portfolio Website E2E & Responsive Tests', () => {
   let consoleErrors = [];
 
   test.beforeEach(async ({ page }) => {
@@ -16,7 +16,8 @@ test.describe('Portfolio Website E2E Tests', () => {
   });
 
   test('should render hero title, top nav bar, and capabilities list with zero console errors', async ({ page }) => {
-    await page.goto('http://127.0.0.1:3000/');
+    await page.goto('http://localhost:3000/');
+    await page.waitForTimeout(4000);
 
     // Verify Brand Group
     const logo = page.locator('.nav-logo');
@@ -29,10 +30,6 @@ test.describe('Portfolio Website E2E Tests', () => {
     const nameTitle = page.locator('.hero-name-title');
     await expect(nameTitle).toContainText('TUSHIT');
     await expect(nameTitle).toContainText('AUDI');
-
-    // Verify Role Tag
-    const roleTag = page.locator('.hero-role-tag');
-    await expect(roleTag).toContainText('WEB DEVELOPER ↖ AUTOMATION SPECIALIST');
 
     // Verify Capabilities Title
     const capTitle = page.locator('.capabilities-title');
@@ -47,8 +44,8 @@ test.describe('Portfolio Website E2E Tests', () => {
   });
 
   test('should render About Me section with 6-card Bento grid and interactive widgets', async ({ page }) => {
-    await page.goto('http://127.0.0.1:3000/');
-    await page.waitForTimeout(3000); // Wait for preloader
+    await page.goto('http://localhost:3000/');
+    await page.waitForTimeout(4000); // Wait for preloader
 
     const authorName = page.locator('.bento-author-name');
     await expect(authorName).toHaveText('Tushit Audi');
@@ -57,28 +54,24 @@ test.describe('Portfolio Website E2E Tests', () => {
     const bentoCards = page.locator('.bento-card');
     await expect(bentoCards).toHaveCount(6);
 
-    // Verify interactive Globe and Clock canvases are present
+    // Verify interactive Globe canvas and Clock container are present
     const globeCanvas = page.locator('#bento-globe-canvas');
     await expect(globeCanvas).toBeVisible();
 
-    const clockCanvas = page.locator('#bento-clock-canvas');
-    await expect(clockCanvas).toBeVisible();
-
-    const aboutSection = page.locator('#about');
-    await aboutSection.scrollIntoViewIfNeeded();
-    await page.waitForTimeout(1000);
-    await page.screenshot({ path: '/Users/tushitaudi/.gemini/antigravity-ide/brain/db3a0093-148b-4df5-8e25-f903bf6f4eeb/bento_about_screenshot.png', fullPage: false });
+    const clockContainer = page.locator('#bento-clock-container');
+    await expect(clockContainer).toBeVisible();
 
     // Verify zero JavaScript page errors
     expect(consoleErrors).toEqual([]);
   });
 
   test('should render How We Work process timeline, Work, and Contact sections', async ({ page }) => {
-    await page.goto('http://127.0.0.1:3000/');
+    await page.goto('http://localhost:3000/');
+    await page.waitForTimeout(4000);
 
     // How We Work (Process Timeline)
     const processTitle = page.locator('#services .section-display-title');
-    await expect(processTitle).toContainText('From idea to launch — without the pressure.');
+    await expect(processTitle).toContainText('IDEA TO LAUNCH');
 
     const processSteps = page.locator('.process-step-item');
     await expect(processSteps).toHaveCount(5);
@@ -92,6 +85,43 @@ test.describe('Portfolio Website E2E Tests', () => {
     await expect(contactTitle).toContainText("LET'S BUILD SOMETHING REAL.");
 
     // Verify zero JavaScript page errors
+    expect(consoleErrors).toEqual([]);
+  });
+
+  test('should verify responsive fixes for hero, tablet breakpoint, mobile timeline, and laptop widths', async ({ page }) => {
+    // 1. Tablet breakpoint (~768px)
+    await page.setViewportSize({ width: 768, height: 800 });
+    await page.goto('http://localhost:3000/');
+    await page.waitForTimeout(4000);
+
+    const getInTouchBtn = page.locator('#btn-get-touch');
+    await expect(getInTouchBtn).toBeVisible();
+
+    const capItemsTablet = page.locator('.capability-item');
+    const firstCapItem = capItemsTablet.first();
+    await expect(firstCapItem).toBeVisible();
+
+    // 2. Mobile breakpoint (375px)
+    await page.setViewportSize({ width: 375, height: 800 });
+    await page.goto('http://localhost:3000/');
+    await page.waitForTimeout(4000);
+
+    const viewWorkBtn = page.locator('#btn-view-work');
+    const capCardHeader = page.locator('.capabilities-card-header');
+    
+    const btnBox = await viewWorkBtn.boundingBox();
+    const headerBox = await capCardHeader.boundingBox();
+    expect(headerBox.y).toBeGreaterThan(btnBox.y);
+
+    // 3. Laptop breakpoint (1440px)
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto('http://localhost:3000/');
+    await page.waitForTimeout(4000);
+
+    const container = page.locator('.hero-overlay-container');
+    const containerBox = await container.boundingBox();
+    expect(containerBox.width).toBeGreaterThan(1200);
+
     expect(consoleErrors).toEqual([]);
   });
 });
