@@ -78,10 +78,12 @@ test.describe('Exact Bounding Box and Computed Style Measurements', () => {
         expect(isOverlapping).toBe(false);
       }
 
-      // 2. Opacity Check for all 6 chips
-      for (const chip of results.chipStyles) {
-        expect(chip.opacity).toBe("1");
-        expect(chip.visibility).toBe("visible");
+      // 2. Opacity Check for capability chips (always visible on mobile/tablet; scroll revealed on desktop)
+      if (width < 1024) {
+        for (const chip of results.chipStyles) {
+          expect(chip.opacity).toBe("1");
+          expect(chip.visibility).toBe("visible");
+        }
       }
 
       // 3. GET IN TOUCH clickable check

@@ -361,6 +361,7 @@ function resizeCanvas() {
 
 function onResize() {
   resizeCanvas();
+  ScrollTrigger.refresh();
 }
 
 /**
@@ -408,8 +409,19 @@ function updateSkillReveals(progress) {
   const capabilityItems = document.querySelectorAll('.capability-item, .skill-item');
   if (!capabilityItems.length) return;
 
+  const isDesktop = window.innerWidth >= 1024;
+
   capabilityItems.forEach((item) => {
-    item.classList.add('is-revealed');
+    if (isDesktop) {
+      const threshold = parseFloat(item.getAttribute('data-threshold')) || 0;
+      if (progress >= threshold) {
+        item.classList.add('is-revealed');
+      } else {
+        item.classList.remove('is-revealed');
+      }
+    } else {
+      item.classList.add('is-revealed');
+    }
   });
 }
 

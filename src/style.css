@@ -2940,13 +2940,13 @@ html, body {
     max-width: 1640px !important;
   }
   .hero-name-title {
-    font-size: clamp(5.2rem, 6.8vw, 7.8rem);
+    font-size: clamp(3.8rem, 4.0vw, 4.8rem);
   }
   .hero-left-col {
-    max-width: clamp(400px, 32vw, 540px);
+    max-width: clamp(320px, 24vw, 440px);
   }
   .hero-right-col {
-    max-width: clamp(400px, 32vw, 540px);
+    max-width: clamp(340px, 25vw, 420px);
   }
   .capabilities-card {
     max-width: 100%;
@@ -2965,13 +2965,13 @@ html, body {
     max-width: 1420px;
   }
   .hero-name-title {
-    font-size: clamp(4rem, 5.2vw, 5.8rem);
+    font-size: clamp(3.5rem, 4.2vw, 4.8rem);
   }
   .hero-left-col {
-    max-width: clamp(340px, 30vw, 460px);
+    max-width: clamp(320px, 26vw, 420px);
   }
   .hero-right-col {
-    max-width: clamp(340px, 30vw, 460px);
+    max-width: clamp(300px, 24vw, 380px);
   }
   .capabilities-card {
     max-width: 100%;
@@ -2991,10 +2991,10 @@ html, body {
     right: var(--container-padding);
   }
   .hero-name-title {
-    font-size: clamp(3.2rem, 4.8vw, 4.5rem);
+    font-size: clamp(3.0rem, 4.0vw, 4.2rem);
   }
   .capabilities-card {
-    max-width: 340px;
+    max-width: 320px;
   }
   .bento-about-grid {
     grid-template-columns: repeat(3, 1fr);
