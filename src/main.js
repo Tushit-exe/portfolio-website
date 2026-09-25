@@ -417,13 +417,15 @@ function renderFrame(rawFrameIndex) {
    GSAP SCROLLTRIGGER ANIMATIONS
    ========================================================================== */
 function initGSAPAnimations() {
-  // 1. Hero Canvas Rotation ScrollTrigger Easing
+  // 1. Hero Canvas Rotation ScrollTrigger Easing & Explicit Pinning
   if (heroScrollContainer) {
     ScrollTrigger.create({
       trigger: heroScrollContainer,
+      pin: '#hero-viewport',
       start: 'top top',
       end: 'bottom bottom',
-      scrub: 0.3,
+      scrub: 0.1,
+      anticipatePin: 1,
       onUpdate: (self) => {
         if (!isPreloaded || isScrollLocked) return;
         targetProgressIndex = self.progress * (TOTAL_FRAMES - 1);
