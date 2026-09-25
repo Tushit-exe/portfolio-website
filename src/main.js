@@ -395,7 +395,17 @@ function renderFrame(rawFrameIndex) {
   let drawW, drawH, drawX, drawY;
 
   const isMobile = width < 768;
-  const scaleMultiplier = isMobile ? 1.0 : 1.15;
+  const isTablet = width >= 768 && width < 1024;
+  const isUltraWide = width >= 1800;
+
+  let scaleMultiplier = 1.12;
+  if (isMobile) {
+    scaleMultiplier = 0.95;
+  } else if (isTablet) {
+    scaleMultiplier = 1.05;
+  } else if (isUltraWide) {
+    scaleMultiplier = 1.25;
+  }
 
   if (viewportAspect > imgAspect) {
     drawH = height * scaleMultiplier;

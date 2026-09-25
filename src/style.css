@@ -2968,4 +2968,197 @@ html, body {
   color: #ffffff !important;
 }
 
+/* ==========================================================================
+   COMPREHENSIVE MULTI-DEVICE RESPONSIVE SYSTEM
+   (ULTRA-WIDE, LAPTOPS, TABLETS, PHABLETS, & SMALL MOBILES)
+   ========================================================================== */
+
+/* 1. Ultra-Wide Desktops & 4K Monitors (≥ 1600px) */
+@media (min-width: 1600px) {
+  :root {
+    --container-padding: clamp(2rem, 5vw, 6rem);
+  }
+  .full-page-section .section-container,
+  .top-nav-container,
+  .hero-overlay-container,
+  .footer-bar {
+    max-width: 1540px !important;
+  }
+  .hero-name-title {
+    font-size: clamp(5rem, 6.5vw, 7.5rem);
+  }
+  .section-display-title {
+    font-size: clamp(3rem, 4vw, 4.2rem);
+  }
+}
+
+/* 2. Standard Laptops (1200px - 1599px) */
+@media (min-width: 1200px) and (max-width: 1599px) {
+  .hero-name-title {
+    font-size: clamp(4rem, 5.2vw, 5.8rem);
+  }
+}
+
+/* 3. Small Laptops & Landscape Tablets (1024px - 1199px) */
+@media (min-width: 1024px) and (max-width: 1199px) {
+  .hero-overlay-grid {
+    left: var(--container-padding);
+    right: var(--container-padding);
+  }
+  .hero-name-title {
+    font-size: clamp(3.2rem, 4.8vw, 4.5rem);
+  }
+  .capabilities-card {
+    max-width: 340px;
+  }
+  .bento-about-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .projects-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+/* 4. Tablets in Portrait & Medium Screens (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .hero-overlay-container {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .hero-name-title {
+    font-size: clamp(2.8rem, 5vw, 3.8rem);
+  }
+  .capabilities-card {
+    max-width: 300px;
+  }
+  .bento-about-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .bento-card-profile {
+    grid-column: 1 / -1;
+  }
+  .projects-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+  .project-card:last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+/* 5. Mobile Phones & Phablets (< 768px) */
+@media (max-width: 767px) {
+  :root {
+    --container-padding: clamp(1rem, 4vw, 1.5rem);
+  }
+
+  .top-nav-bar {
+    height: 60px;
+    top: 0.8rem;
+  }
+
+  .hero-overlay-grid {
+    top: 52%;
+    left: var(--container-padding);
+    right: var(--container-padding);
+    width: calc(100% - (var(--container-padding) * 2));
+  }
+
+  .hero-overlay-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+    width: 100%;
+  }
+
+  .hero-left-col {
+    max-width: 100%;
+    transform: none;
+  }
+
+  .hero-name-title {
+    font-size: clamp(2.2rem, 10vw, 3.5rem);
+    line-height: 0.92;
+  }
+
+  .hero-right-col {
+    display: none; /* Keep hero clean on mobile; capabilities accessible via bio/services */
+  }
+
+  .hero-btn-row {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    gap: 0.75rem;
+  }
+
+  .btn-solid, .btn-link, .btn-outline {
+    width: 100%;
+    justify-content: center;
+    padding: 0.9rem 1.5rem;
+    font-size: 0.78rem;
+  }
+
+  .bento-about-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .bento-card {
+    padding: 20px;
+  }
+
+  .projects-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .project-info {
+    padding: 1.25rem;
+  }
+
+  .contact-display-headline {
+    font-size: clamp(2.2rem, 8vw, 3.8rem);
+  }
+
+  .contact-btn-row {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .footer-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.25rem;
+    padding-top: 1.8rem;
+  }
+
+  .footer-socials {
+    flex-wrap: wrap;
+    gap: 1.2rem;
+  }
+}
+
+/* 6. Very Small Mobile Screens (< 380px) */
+@media (max-width: 379px) {
+  .hero-name-title {
+    font-size: clamp(1.9rem, 9.5vw, 2.5rem);
+  }
+  .section-display-title {
+    font-size: clamp(1.5rem, 7vw, 2rem);
+  }
+  .bento-card-title {
+    font-size: 1.1rem;
+  }
+  .modal-card {
+    padding: 1.5rem;
+  }
+}
+
+
 
