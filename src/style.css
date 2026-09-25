@@ -3094,7 +3094,7 @@ html, body {
     pointer-events: auto;
   }
   .capabilities-card {
-    max-width: 280px;
+    max-width: 185px;
     background: transparent;
     border: none;
     box-shadow: none;
@@ -3165,7 +3165,7 @@ html, body {
     opacity: 0.8;
   }
 
-  /* Mobile Hero Grid Layout - Clean Sequential Top-to-Bottom Flow */
+  /* Mobile Hero Grid Layout - Clean Top & Bottom Split */
   .hero-overlay-grid {
     position: absolute;
     inset: 0;
@@ -3174,22 +3174,22 @@ html, body {
     right: 0;
     bottom: 0;
     transform: none;
-    padding: clamp(4.2rem, 9vh, 5.5rem) var(--container-padding) 1.5rem var(--container-padding);
+    padding: clamp(4.2rem, 8vh, 5.2rem) var(--container-padding) 1.25rem var(--container-padding);
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: space-between;
     pointer-events: none;
     z-index: 30;
     isolation: isolate;
   }
 
   .hero-overlay-container {
-    height: auto;
+    height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: flex-start;
-    gap: 1.25rem;
+    gap: 1rem;
     width: 100%;
     pointer-events: none;
   }
@@ -3201,7 +3201,7 @@ html, body {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    gap: 1.25rem;
+    gap: 1rem;
     pointer-events: auto;
   }
 
@@ -3264,7 +3264,7 @@ html, body {
   .hero-right-col {
     display: flex;
     width: 100%;
-    margin-top: 1.25rem;
+    margin-top: auto;
     transform: none !important;
     pointer-events: auto;
   }
@@ -3274,21 +3274,25 @@ html, body {
     max-width: 100%;
     text-align: left;
     margin-left: 0;
-    background: transparent;
-    border: none;
-    box-shadow: none;
+    background: rgba(245, 244, 240, 0.88);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(8, 8, 8, 0.12);
+    border-radius: 8px;
+    padding: 0.65rem 0.85rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
   }
 
   .capabilities-card-header {
     justify-content: flex-start;
     border-bottom: 1px solid var(--border-light);
-    margin-bottom: 0.5rem;
-    padding-bottom: 0.4rem;
+    margin-bottom: 0.4rem;
+    padding-bottom: 0.35rem;
   }
 
   .capabilities-title {
     text-align: left;
-    font-size: 0.65rem;
+    font-size: 0.62rem;
   }
 
   .capabilities-card-list {
