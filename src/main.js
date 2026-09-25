@@ -42,6 +42,8 @@ const MIN_PRELOADER_DURATION = 3000; // 3 seconds minimum display time
 let preloaderStartTime = Date.now();
 let displayedPercent = 0;
 
+const CRITICAL_FRAMES_COUNT = 12;
+
 /**
  * Format frame index with 3-digit padding (e.g. 1 -> 001, 12 -> 012)
  */
@@ -51,38 +53,103 @@ function getFrameFilename(index) {
 }
 
 /**
- * Asynchronously preload 118 sequence frames in background
+ * Asynchronously preload initial critical batch (12 frames) for instant page load,
+ * then lazy-load remaining frames in background idle batches.
  */
 function preloadAllFrames() {
   return new Promise((resolve) => {
+    let criticalLoadedCount = 0;
     let isResolved = false;
-    const checkDone = () => {
-      if (!isResolved && (imagesLoadedCount >= TOTAL_FRAMES || Date.now() - preloaderStartTime > 4000)) {
+
+    const resolveCritical = () => {
+      if (!isResolved) {
         isResolved = true;
         resolve();
+        loadRemainingFramesBatched();
       }
     };
 
     preloaderStartTime = Date.now();
-    for (let i = 0; i < TOTAL_FRAMES; i++) {
+    for (let i = 0; i < CRITICAL_FRAMES_COUNT; i++) {
       const img = new Image();
       img.src = getFrameFilename(i);
       img.onload = () => {
         loadedImages[i] = img;
+        criticalLoadedCount++;
         imagesLoadedCount++;
         if (i === 0) {
           resizeCanvas();
           renderFrame(0);
         }
-        checkDone();
+        if (criticalLoadedCount >= CRITICAL_FRAMES_COUNT) {
+          resolveCritical();
+        }
       };
       img.onerror = () => {
+        criticalLoadedCount++;
         imagesLoadedCount++;
-        checkDone();
+        if (criticalLoadedCount >= CRITICAL_FRAMES_COUNT) {
+          resolveCritical();
+        }
       };
     }
-    setTimeout(checkDone, 2000);
+
+    setTimeout(resolveCritical, 1800);
   });
+}
+
+/**
+ * Lazy-load remaining frames (12 to 117) in background idle batches
+ */
+function loadRemainingFramesBatched() {
+  let nextFrame = CRITICAL_FRAMES_COUNT;
+  const BATCH_SIZE = 10;
+
+  function loadBatch() {
+    if (nextFrame >= TOTAL_FRAMES) return;
+
+    const end = Math.min(nextFrame + BATCH_SIZE, TOTAL_FRAMES);
+    for (let i = nextFrame; i < end; i++) {
+      if (loadedImages[i]) continue;
+      const img = new Image();
+      img.src = getFrameFilename(i);
+      img.onload = () => { loadedImages[i] = img; imagesLoadedCount++; };
+      img.onerror = () => { imagesLoadedCount++; };
+    }
+    nextFrame = end;
+
+    if (nextFrame < TOTAL_FRAMES) {
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(loadBatch, { timeout: 1000 });
+      } else {
+        setTimeout(loadBatch, 80);
+      }
+    }
+  }
+
+  setTimeout(loadBatch, 250);
+}
+
+/**
+ * Get exact target frame or fallback to nearest available preloaded frame
+ */
+function getClosestLoadedFrame(targetIndex) {
+  const index = Math.min(TOTAL_FRAMES - 1, Math.max(0, Math.floor(targetIndex)));
+  if (loadedImages[index] && loadedImages[index].complete) {
+    return loadedImages[index];
+  }
+
+  for (let offset = 1; offset < TOTAL_FRAMES; offset++) {
+    const prev = index - offset;
+    const next = index + offset;
+    if (prev >= 0 && loadedImages[prev] && loadedImages[prev].complete) {
+      return loadedImages[prev];
+    }
+    if (next < TOTAL_FRAMES && loadedImages[next] && loadedImages[next].complete) {
+      return loadedImages[next];
+    }
+  }
+  return null;
 }
 
 /**
@@ -130,6 +197,7 @@ function initPreloader() {
 
   // Handle reduced motion preference
   if (prefersReducedMotion) {
+    if (preloaderText) preloaderText.textContent = '';
     preloader.remove();
     document.body.style.overflow = '';
     isPreloaded = true;
@@ -214,6 +282,7 @@ function initPreloader() {
         document.body.style.overflow = '';
         isScrollLocked = false;
         visibleSlats.forEach((slat) => (slat.style.willChange = 'auto'));
+        if (preloaderText) preloaderText.textContent = '';
         if (preloader) preloader.remove();
         onScroll();
         ScrollTrigger.refresh();
@@ -339,9 +408,11 @@ function updateSkillReveals(progress) {
   const capabilityItems = document.querySelectorAll('.capability-item, .skill-item');
   if (!capabilityItems.length) return;
 
+  const isMobile = window.innerWidth < 768;
+
   capabilityItems.forEach((item) => {
     const threshold = parseFloat(item.dataset.threshold || '0');
-    if (progress >= threshold) {
+    if (isMobile || progress >= threshold || (progress === 0 && threshold <= 0.20)) {
       item.classList.add('is-revealed');
     } else {
       item.classList.remove('is-revealed');
@@ -378,8 +449,7 @@ function startAnimationLoop() {
  * Draw specified frame index on hero canvas centered with contain aspect ratio
  */
 function renderFrame(rawFrameIndex) {
-  const frameIndex = Math.min(TOTAL_FRAMES - 1, Math.max(0, Math.floor(rawFrameIndex)));
-  const img = loadedImages[frameIndex];
+  const img = getClosestLoadedFrame(rawFrameIndex);
 
   if (!img || !img.complete) return;
 

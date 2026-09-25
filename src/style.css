@@ -3158,7 +3158,55 @@ html, body {
   }
 
   .hero-right-col {
-    display: none;
+    display: flex;
+    width: 100%;
+    margin-top: 0.8rem;
+  }
+
+  .capabilities-card {
+    width: 100%;
+    max-width: 100%;
+    text-align: left;
+    margin-left: 0;
+  }
+
+  .capabilities-card-header {
+    justify-content: flex-start;
+    border-bottom: 1px solid var(--border-light);
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.4rem;
+  }
+
+  .capabilities-title {
+    text-align: left;
+    font-size: 0.65rem;
+  }
+
+  .capabilities-card-list {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.35rem;
+    text-align: left;
+  }
+
+  .capability-item {
+    justify-content: flex-start;
+    text-align: left;
+    transform: none !important;
+    opacity: 1 !important;
+    filter: none !important;
+    background-color: rgba(8, 8, 8, 0.05);
+    border: 1px solid var(--border-light);
+    border-radius: 3px;
+    padding: 0.25rem 0.55rem;
+  }
+
+  .cap-label {
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
   }
 
   .bento-about-grid {
