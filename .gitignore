@@ -1,3 +1,9 @@
 node_modules
 dist
 .DS_Store
+
+# Local AI coding-tool configs (not part of the site)
+.cursor
+.gemini
+.agent
+.hermes
