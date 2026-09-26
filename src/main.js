@@ -319,15 +319,32 @@ function resizeCanvas() {
   canvas.style.width = `${width}px`;
   canvas.style.height = `${height}px`;
 
+  // Explicitly reset the transform before re-applying the DPR scale. Relying on the
+  // implicit reset that comes from setting canvas.width/height is fragile across
+  // browsers/OS display-scaling combinations (e.g. dragging the window between two
+  // monitors with different scaling) and was letting the scale compound on some
+  // rapid resize sequences, which showed up as the frame image drifting/zooming.
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.scale(dpr, dpr);
   
   // Re-draw current frame on resize
   renderFrame(Math.round(currentProgressIndex));
 }
 
+// ScrollTrigger.refresh() recalculates every pin/scrub position on the page and is
+// expensive. Browsers can fire a burst of many `resize` events in quick succession
+// (most commonly when a window is dragged across two monitors with different DPI/
+// scaling), and calling refresh() on every single one of them was causing the
+// pinned hero to visibly stutter or momentarily stick on larger/multi-monitor
+// setups. Keep the canvas fit itself instant (cheap, keeps things looking sharp
+// while resizing), but debounce the expensive refresh to once the resize settles.
+let scrollTriggerRefreshTimeout = null;
 function onResize() {
   resizeCanvas();
-  ScrollTrigger.refresh();
+  clearTimeout(scrollTriggerRefreshTimeout);
+  scrollTriggerRefreshTimeout = setTimeout(() => {
+    ScrollTrigger.refresh();
+  }, 200);
 }
 
 /**
