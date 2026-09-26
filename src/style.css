@@ -396,8 +396,13 @@ body {
 }
 
 .hero-viewport {
-  position: sticky;
-  top: 0;
+  /* Pinning is handled entirely by GSAP ScrollTrigger's `pin` option (see main.js),
+     which applies its own position/fixed styling while it's active. Also declaring
+     CSS `position: sticky` here fights with that: the two positioning mechanisms
+     recalculate independently on scroll/resize, which is what was causing the hero
+     content to visibly jump or land in the wrong spot (most noticeable on larger
+     screens and multi-monitor setups, where resize/refresh happens more often). */
+  position: relative;
   width: 100%;
   height: 100vh;
   overflow: hidden;
