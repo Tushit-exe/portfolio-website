@@ -10,7 +10,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 const TOTAL_FRAMES = 118;
 const FRAME_PATH_PREFIX = '/assets/frames/frame_';
-const FRAME_PATH_SUFFIX = '.png';
+const FRAME_PATH_SUFFIX = '.webp';
 
 // DOM Elements
 const preloader = document.getElementById('preloader');
@@ -42,7 +42,6 @@ const MIN_PRELOADER_DURATION = 3000; // 3 seconds minimum display time
 let preloaderStartTime = Date.now();
 let displayedPercent = 0;
 
-const CRITICAL_FRAMES_COUNT = 12;
 
 /**
  * Format frame index with 3-digit padding (e.g. 1 -> 001, 12 -> 012)
@@ -53,81 +52,50 @@ function getFrameFilename(index) {
 }
 
 /**
- * Asynchronously preload initial critical batch (12 frames) for instant page load,
- * then lazy-load remaining frames in background idle batches.
+ * Preload every hero frame before handing scroll control to the user.
+ * Frames are small (WebP, ~14KB avg) so loading all 118 up front is fast
+ * and guarantees the scrubber never lands on a not-yet-loaded frame
+ * (which previously showed as a stutter/pop while scrolling the hero).
+ * A hard safety timeout still lets the site continue on a very slow
+ * connection rather than blocking forever.
  */
 function preloadAllFrames() {
   return new Promise((resolve) => {
-    let criticalLoadedCount = 0;
+    let loadedCount = 0;
     let isResolved = false;
 
-    const resolveCritical = () => {
+    const finish = () => {
       if (!isResolved) {
         isResolved = true;
         resolve();
-        loadRemainingFramesBatched();
       }
     };
 
     preloaderStartTime = Date.now();
-    for (let i = 0; i < CRITICAL_FRAMES_COUNT; i++) {
+
+    for (let i = 0; i < TOTAL_FRAMES; i++) {
       const img = new Image();
       img.src = getFrameFilename(i);
       img.onload = () => {
         loadedImages[i] = img;
-        criticalLoadedCount++;
+        loadedCount++;
         imagesLoadedCount++;
         if (i === 0) {
           resizeCanvas();
           renderFrame(0);
         }
-        if (criticalLoadedCount >= CRITICAL_FRAMES_COUNT) {
-          resolveCritical();
-        }
+        if (loadedCount >= TOTAL_FRAMES) finish();
       };
       img.onerror = () => {
-        criticalLoadedCount++;
+        loadedCount++;
         imagesLoadedCount++;
-        if (criticalLoadedCount >= CRITICAL_FRAMES_COUNT) {
-          resolveCritical();
-        }
+        if (loadedCount >= TOTAL_FRAMES) finish();
       };
     }
 
-    setTimeout(resolveCritical, 1800);
+    // Safety net: never block interaction forever on a very slow connection
+    setTimeout(finish, 8000);
   });
-}
-
-/**
- * Lazy-load remaining frames (12 to 117) in background idle batches
- */
-function loadRemainingFramesBatched() {
-  let nextFrame = CRITICAL_FRAMES_COUNT;
-  const BATCH_SIZE = 10;
-
-  function loadBatch() {
-    if (nextFrame >= TOTAL_FRAMES) return;
-
-    const end = Math.min(nextFrame + BATCH_SIZE, TOTAL_FRAMES);
-    for (let i = nextFrame; i < end; i++) {
-      if (loadedImages[i]) continue;
-      const img = new Image();
-      img.src = getFrameFilename(i);
-      img.onload = () => { loadedImages[i] = img; imagesLoadedCount++; };
-      img.onerror = () => { imagesLoadedCount++; };
-    }
-    nextFrame = end;
-
-    if (nextFrame < TOTAL_FRAMES) {
-      if ('requestIdleCallback' in window) {
-        requestIdleCallback(loadBatch, { timeout: 1000 });
-      } else {
-        setTimeout(loadBatch, 80);
-      }
-    }
-  }
-
-  setTimeout(loadBatch, 250);
 }
 
 /**
@@ -159,10 +127,8 @@ function getClosestLoadedFrame(targetIndex) {
  * Core Animation Engine & Event Listeners
  */
 function initCoreEngine() {
-  window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', onResize);
 
-  startAnimationLoop();
   initGSAPAnimations();
 
   // Bind smooth anchor navigation for full-page sections
@@ -426,31 +392,6 @@ function updateSkillReveals(progress) {
 }
 
 /**
- * 60fps render loop with smooth inertia lerping between scroll frame states
- */
-function startAnimationLoop() {
-  function loop() {
-    // Lerp towards target frame for silky smooth motion
-    const diff = targetProgressIndex - currentProgressIndex;
-    
-    if (Math.abs(diff) > 0.001) {
-      currentProgressIndex += diff * 0.18;
-      renderFrame(Math.min(TOTAL_FRAMES - 1, Math.max(0, currentProgressIndex)));
-    } else {
-      currentProgressIndex = targetProgressIndex;
-    }
-
-    // Continuously sync capability item highlight states with frame progress (60fps)
-    const lerpedProgress = currentProgressIndex / (TOTAL_FRAMES - 1);
-    updateSkillReveals(lerpedProgress);
-
-    animationFrameId = requestAnimationFrame(loop);
-  }
-
-  loop();
-}
-
-/**
  * Draw specified frame index on hero canvas centered with contain aspect ratio
  */
 function renderFrame(rawFrameIndex) {
@@ -513,7 +454,8 @@ function initGSAPAnimations() {
       anticipatePin: 1,
       onUpdate: (self) => {
         if (!isPreloaded || isScrollLocked) return;
-        targetProgressIndex = self.progress * (TOTAL_FRAMES - 1);
+        currentProgressIndex = self.progress * (TOTAL_FRAMES - 1);
+        renderFrame(currentProgressIndex);
         updateSkillReveals(self.progress);
       }
     });

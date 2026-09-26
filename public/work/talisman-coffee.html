@@ -1,0 +1,1640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Talisman Coffee | Café manager dashboard (concept)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..600,0..100&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --roast:#1B1A18; --char:#222220; --char2:#2A2926; --line:#38372F; --line-soft:#2B2A27;
+  --crema:#F2EEE7; --chicory:#A7A198; --dim:#79746C;
+  --brass:#D9A76B; --brass-ink:#1B1710; --brass-soft:rgba(217,167,107,.15);
+  --brass-lt:#F5DFB8;
+  --sage:#97BCA0; --sage-soft:rgba(151,188,160,.13);
+  --amber:#E3AD50; --amber-soft:rgba(227,173,80,.13);
+  --rose:#DC8877; --rose-soft:rgba(220,136,119,.13);
+  --serif:'Fraunces',Georgia,'Times New Roman',serif;
+  --sans:'Hanken Grotesk',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--roast);color:var(--crema);font-family:var(--sans);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums lining-nums}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.muted{color:var(--chicory)} .dim{color:var(--dim)} .small{font-size:14px}
+
+/* Shell */
+.app{display:grid;grid-template-columns:224px minmax(0,1fr);height:100vh;height:100dvh}
+.side{display:flex;flex-direction:column;gap:34px;padding:26px 14px 20px;border-right:1px solid var(--line-soft);background:var(--roast)}
+.brand{display:flex;align-items:center;gap:10px;padding:0 10px}
+.brand svg{flex:none}
+.brand-name{font-family:var(--serif);font-size:21px;font-weight:500;line-height:1.1;letter-spacing:-.01em;font-variation-settings:"SOFT" 100,"opsz" 40}
+.brand-sub{display:block;font-family:var(--sans);font-size:12px;color:var(--dim);font-weight:400;letter-spacing:0;margin-top:2px}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav-btn{display:flex;align-items:center;gap:12px;width:100%;padding:10px 12px;border:0;border-radius:10px;background:none;color:var(--chicory);text-align:left;font-size:15px}
+.nav-btn svg{width:19px;height:19px;flex:none}
+.nav-btn:hover{color:var(--crema);background:rgba(239,230,218,.04)}
+.nav-btn[aria-current="page"]{color:var(--crema);background:var(--char2)}
+.nav-btn[aria-current="page"] svg{color:var(--brass)}
+.nav-label{position:relative}
+.nav-label::after{content:"";position:absolute;right:-10px;top:3px;width:6px;height:6px;border-radius:50%;background:var(--brass);display:none}
+.nav-btn.has-new .nav-label::after{display:block}
+.nav-count{margin-left:auto;font-size:13px;color:var(--dim);font-variant-numeric:tabular-nums}
+#alfredNavBtn{margin-top:10px;padding-top:14px;border-top:1px solid var(--line-soft);color:var(--brass)}
+#alfredNavBtn svg{color:var(--brass)}
+#alfredNavBtn:hover{background:var(--brass-soft);color:var(--brass-lt)}
+.lbl-short{display:none}
+.side-foot{margin-top:auto;display:flex;align-items:center;gap:10px;padding:16px 10px 0;border-top:1px solid var(--line-soft)}
+.avatar{width:34px;height:34px;border-radius:50%;background:var(--char2);border:1px solid var(--line);display:grid;place-items:center;font-size:12px;font-weight:600;color:var(--brass);flex:none}
+.who{font-size:14px;line-height:1.3}
+.who span{display:block;color:var(--dim);font-size:12px}
+
+.main{overflow-y:auto;min-width:0}
+.topline{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px 40px 0;color:var(--dim);font-size:13px}
+.m-brand{display:none;font-family:var(--serif);font-size:18px;color:var(--crema);margin-right:10px}
+.badge{border:1px solid var(--line);border-radius:999px;padding:4px 11px;color:var(--chicory);font-size:12px;white-space:nowrap}
+.view{padding:16px 40px 64px;max-width:1240px}
+.view[hidden]{display:none}
+.page-head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:26px}
+h1{font-family:var(--serif);font-weight:400;font-size:clamp(30px,3.3vw,44px);line-height:1.08;letter-spacing:-.02em;margin:0;font-variation-settings:"SOFT" 100,"opsz" 144}
+.lede{margin:10px 0 0;color:var(--chicory);font-size:16px;max-width:62ch}
+h2{font-family:var(--serif);font-weight:500;font-size:19px;line-height:1.25;margin:0;font-variation-settings:"SOFT" 60,"opsz" 30}
+.panel{background:var(--char);border:1px solid var(--line-soft);border-radius:16px;padding:20px 22px}
+.panel.flush{padding:4px 6px}
+.panel-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.link{background:none;border:0;color:var(--brass);padding:0;font-size:14px}
+.link:hover{text-decoration:underline;text-underline-offset:3px}
+.empty{color:var(--dim);font-size:14px;padding:8px 0;list-style:none}
+
+.btn{border:1px solid var(--line);background:var(--char2);border-radius:999px;padding:6px 14px;font-size:13px;color:var(--crema);white-space:nowrap}
+.btn:hover{border-color:var(--chicory)}
+.btn.primary{background:var(--brass);border-color:var(--brass);color:var(--brass-ink);font-weight:600}
+.btn.primary:hover{filter:brightness(1.07)}
+.btn.quiet{background:none}
+.btn[disabled]{opacity:.55;cursor:default}
+
+/* Stats strip */
+.strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:26px}
+.stat{padding:18px 20px 18px 0}
+.stat+.stat{padding-left:22px;border-left:1px solid var(--line-soft)}
+.stat-val{font-family:var(--serif);font-size:32px;line-height:1.1;font-variation-settings:"opsz" 72,"SOFT" 50;font-variant-numeric:tabular-nums lining-nums}
+.stat-label{font-size:14px;margin-top:6px}
+.stat-note{color:var(--dim);font-size:13px}
+
+/* Today */
+.today-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.span-2{grid-column:1/-1}
+.legend{display:flex;gap:16px;font-size:13px;color:var(--chicory);flex-wrap:wrap}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:7px;vertical-align:-1px}
+.lg-seated{background:var(--brass)} .lg-soon{border:1.5px dashed var(--amber)} .lg-free{border:1.5px solid var(--line)}
+.floor{--s:1;position:relative;aspect-ratio:2/1;border-radius:12px;overflow:hidden;border:1px solid var(--line-soft);
+  background:radial-gradient(circle at 1px 1px,rgba(239,230,218,.07) 1px,transparent 0) 0 0/22px 22px,var(--roast)}
+.window{position:absolute;left:0;top:8%;bottom:8%;width:4px;border-radius:0 3px 3px 0;background:var(--line)}
+.zone{position:absolute;color:var(--dim);font-size:11px;letter-spacing:.02em;pointer-events:none}
+.z-window{left:10px;top:50%;writing-mode:vertical-rl;transform:translateY(-50%) rotate(180deg)}
+.bar{position:absolute;right:3%;top:7%;width:17%;height:26%;border:1px solid var(--line);border-radius:10px;display:grid;place-items:center;color:var(--dim);font-size:12px;background:rgba(239,230,218,.025)}
+.door{position:absolute;bottom:0;left:60%;width:12%;height:4px;border-radius:3px 3px 0 0;background:var(--brass);opacity:.55}
+.z-door{bottom:9px;left:66%;transform:translateX(-50%)}
+.tbl{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:0;
+  border:1.5px solid var(--line);background:var(--char);color:var(--dim);transition:border-color .2s,background-color .2s,box-shadow .2s}
+.tbl:hover{border-color:var(--chicory)}
+.tbl.round{width:calc(60px*var(--s));height:calc(60px*var(--s));border-radius:50%}
+.tbl.square{width:calc(76px*var(--s));height:calc(76px*var(--s));border-radius:14px}
+.tbl.long{width:calc(80px*var(--s));height:calc(140px*var(--s));border-radius:16px}
+.tbl-id{font-family:var(--serif);font-size:calc(16px*var(--s));line-height:1;color:var(--crema)}
+.tbl-meta{font-size:11px;line-height:1.1;font-variant-numeric:tabular-nums}
+.tbl.seated{background:var(--brass-soft);border-color:var(--brass);color:var(--brass)}
+.tbl.soon{border-style:dashed;border-color:var(--amber);color:var(--amber)}
+.tbl.selected{box-shadow:0 0 0 3px var(--roast),0 0 0 5px var(--crema)}
+.tbl.pulse{animation:pulse 1.5s ease-out 3}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(209,171,108,.6)}100%{box-shadow:0 0 0 22px rgba(209,171,108,0)}}
+.floor-detail{margin-top:14px;min-height:40px;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;font-size:14px;color:var(--chicory)}
+.floor-detail strong{color:var(--crema);font-weight:600}
+
+.timeline{list-style:none;margin:0;padding:0}
+.timeline li{display:grid;grid-template-columns:82px 1fr;gap:12px;padding:12px 0;border-top:1px solid var(--line-soft)}
+.timeline li:first-child{border-top:0;padding-top:2px}
+.tl-time{font-family:var(--serif);font-size:17px;line-height:1.3;font-variant-numeric:tabular-nums lining-nums}
+.tl-name{font-weight:500}
+.tl-meta{color:var(--dim);font-size:13px}
+.tl-note{color:var(--brass);font-size:13px;margin-top:2px}
+
+.feed{list-style:none;margin:0;padding:0;max-height:330px;overflow-y:auto}
+.feed li{display:grid;grid-template-columns:70px 1fr;gap:10px;padding:10px 6px;margin:0 -6px;border-radius:8px;font-size:14px}
+.feed li+li{border-top:1px solid var(--line-soft);border-radius:0}
+.feed time{color:var(--dim);font-size:13px;font-variant-numeric:tabular-nums}
+.k{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:9px;vertical-align:1px;background:var(--dim)}
+.k-book{background:var(--sage)} .k-order{background:var(--brass)} .k-pay{background:var(--brass)} .k-seat{background:var(--crema)} .k-cancel{background:var(--rose)} .k-staff{background:var(--amber)}
+.fresh{animation:fresh 2.6s ease-out}
+@keyframes fresh{from{background-color:var(--brass-soft)}to{background-color:transparent}}
+
+.week svg{display:block;width:100%;height:auto}
+.week .bar-rect{fill:var(--line)}
+.week .bar-rect.on{fill:var(--brass)}
+.week .grid{stroke:var(--line-soft);stroke-width:1}
+.week .ax{fill:var(--dim);font-size:13px;font-family:var(--sans)}
+.week .ax.on{fill:var(--crema)}
+.week .val{fill:var(--crema);font-size:14px;font-family:var(--serif)}
+.week .gl{fill:var(--dim);font-size:11px;font-family:var(--sans)}
+
+/* Tables */
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px;flex-wrap:wrap}
+.seg button{border:0;background:none;padding:6px 14px;border-radius:999px;color:var(--chicory);font-size:13px}
+.seg button[aria-pressed="true"]{background:var(--char2);color:var(--crema)}
+.tablewrap{overflow-x:auto;position:relative}
+table.data{width:100%;border-collapse:collapse;font-size:14px;min-width:720px}
+#resTable td:nth-child(2), #guestTable td:nth-child(1){min-width:168px}
+.data th{text-align:left;font-weight:500;color:var(--dim);font-size:13px;padding:13px 16px;border-bottom:1px solid var(--line)}
+.data td{padding:13px 16px;border-bottom:1px solid var(--line-soft);vertical-align:middle}
+.data tr:last-child td{border-bottom:0}
+.data .when{font-variant-numeric:tabular-nums;white-space:nowrap}
+.data .sub{display:block;color:var(--dim);font-size:13px}
+.pill{display:inline-block;padding:2px 10px;border-radius:999px;font-size:12px;font-weight:500;white-space:nowrap}
+.p-seated{background:var(--brass-soft);color:var(--brass)}
+.p-confirmed{background:var(--sage-soft);color:var(--sage)}
+.p-pending{background:var(--amber-soft);color:var(--amber)}
+.p-cancelled{background:var(--rose-soft);color:var(--rose)}
+.p-completed{background:rgba(239,230,218,.06);color:var(--dim)}
+.actions{display:flex;gap:6px;justify-content:flex-end}
+
+/* Orders board */
+.board{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(240px,1fr);gap:16px;overflow-x:auto;padding-bottom:8px;align-items:start}
+.col{background:var(--char);border:1px solid var(--line-soft);border-radius:16px;padding:14px;min-height:340px}
+.col-head{display:flex;justify-content:space-between;align-items:baseline;margin:2px 4px 14px}
+.col-head h2{font-size:17px}
+.col .empty{padding:4px}
+.ticket{background:var(--char2);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:10px}
+.t-top{display:flex;justify-content:space-between;font-size:13px;color:var(--dim)}
+.t-guest{font-weight:600;margin:6px 0 1px}
+.t-type{font-size:13px;color:var(--chicory);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.t-items{list-style:none;margin:12px 0 0;padding:10px 0 0;border-top:1px dashed var(--line);font-size:14px}
+.t-items li{display:flex;justify-content:space-between;gap:10px;padding:2px 0}
+.t-foot{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:12px}
+.t-total{font-family:var(--serif);font-size:18px;font-variant-numeric:tabular-nums lining-nums}
+
+/* Guests */
+.guests-grid{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:20px;align-items:start}
+.guests-grid > .panel{min-width:0}
+.guests-grid table.data{min-width:560px}
+.search{background:var(--char);border:1px solid var(--line);border-radius:999px;padding:9px 16px;width:min(300px,100%);color:var(--crema)}
+.search::placeholder{color:var(--dim)}
+.quiet-list{list-style:none;margin:14px 0 0;padding:0}
+.quiet-list li{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 0;border-top:1px solid var(--line-soft)}
+.quiet-list .sub{display:block;color:var(--dim);font-size:13px}
+
+/* Concierge */
+.concierge{display:flex;flex-direction:column;height:100vh;height:100dvh;min-width:0;background:var(--char);border-left:1px solid var(--line-soft)}
+.cg-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:26px 22px 14px}
+.cg-head p{margin:6px 0 0;color:var(--chicory);font-size:14px;max-width:36ch}
+.cg-close{display:none;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:none;place-items:center;color:var(--chicory);flex:none}
+.as{display:flex;align-items:center;gap:10px;padding:0 22px 16px;font-size:13px;color:var(--dim);border-bottom:1px solid var(--line-soft)}
+.as select{flex:1;min-width:0;background:var(--char2);border:1px solid var(--line);border-radius:10px;padding:8px 10px;color:var(--crema)}
+.chat{flex:1;overflow-y:auto;padding:18px 16px 10px;display:flex;flex-direction:column;gap:8px;background:var(--roast)}
+.note{align-self:center;text-align:center;font-size:12px;color:var(--dim);max-width:32ch;margin:2px 0 10px;line-height:1.45}
+.msg{max-width:86%;padding:9px 13px 6px;border-radius:16px;font-size:14px;line-height:1.45;overflow-wrap:anywhere}
+.msg.me{align-self:flex-end;background:var(--brass);color:var(--brass-ink);border-bottom-right-radius:5px}
+.msg.bot{align-self:flex-start;background:var(--char2);border:1px solid var(--line);border-bottom-left-radius:5px}
+.msg b{font-weight:600}
+.ts{display:block;font-size:11px;opacity:.6;margin-top:3px;text-align:right;font-variant-numeric:tabular-nums}
+.typing{padding:12px 14px}
+.typing span{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--chicory);margin:0 2px;animation:blink 1s infinite}
+.typing span:nth-child(2){animation-delay:.15s} .typing span:nth-child(3){animation-delay:.3s}
+@keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:10px 16px;background:var(--roast);scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid var(--line);background:var(--char);border-radius:999px;padding:6px 12px;font-size:13px;color:var(--chicory);white-space:nowrap}
+.chip:hover{color:var(--crema);border-color:var(--chicory)}
+.chip.hot{border-color:var(--brass);color:var(--brass)}
+.composer{display:flex;gap:8px;padding:10px 16px calc(16px + env(safe-area-inset-bottom));background:var(--roast);border-top:1px solid var(--line-soft)}
+.composer input{flex:1;min-width:0;background:var(--char);border:1px solid var(--line);border-radius:999px;padding:11px 16px;color:var(--crema)}
+.composer input::placeholder{color:var(--dim)}
+.send{width:44px;height:44px;border-radius:50%;border:0;background:var(--brass);color:var(--brass-ink);display:grid;place-items:center;flex:none}
+.concierge{position:fixed;top:0;right:0;bottom:0;width:min(420px,100%);z-index:60;transform:translateX(105%);transition:transform .3s ease;box-shadow:-24px 0 60px rgba(0,0,0,.55);display:flex}
+.concierge.open{transform:none}
+.cg-close{display:grid}
+.scrim{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:55}
+.scrim.show{display:block}
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,16px);opacity:0;background:var(--crema);color:var(--brass-ink);padding:11px 18px;border-radius:12px;font-size:14px;font-weight:500;
+  box-shadow:0 14px 36px rgba(0,0,0,.45);transition:opacity .25s,transform .25s;z-index:70;pointer-events:none;max-width:calc(100% - 32px)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+@media (max-width:1280px){
+  .app{grid-template-columns:212px minmax(0,1fr)}
+}
+@media (max-width:1020px){
+  .guests-grid{grid-template-columns:1fr}
+  .today-grid{grid-template-columns:1fr}
+}
+@media (max-width:760px){
+  .app{display:block;height:auto}
+  .main{overflow:visible}
+  .side{position:fixed;left:0;right:0;bottom:0;z-index:40;flex-direction:row;gap:0;padding:6px 6px calc(6px + env(safe-area-inset-bottom));border-right:0;border-top:1px solid var(--line-soft)}
+  .brand,.side-foot{display:none}
+  .nav{flex-direction:row;width:100%;justify-content:space-around;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .nav::-webkit-scrollbar{display:none}
+  .nav-btn{flex-direction:column;align-items:center;gap:3px;width:auto;flex:none;padding:6px 9px;font-size:11px}
+  #alfredNavBtn{margin-top:0;padding-top:6px;border-top:0}
+  .lbl-full{display:none}
+  .lbl-short{display:inline}
+  .nav-count{display:none}
+  .nav-label::after{right:-8px;top:0}
+  .topline{padding:16px 18px 0}
+  .m-brand{display:inline}
+  #clock{display:none}
+  .view{padding:14px 18px 120px}
+  .panel{padding:16px 14px}
+  .strip{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .stat,.stat+.stat{padding:14px 12px}
+  .stat:nth-child(odd){padding-left:0;border-left:0}
+  .stat:nth-child(n+3){border-top:1px solid var(--line-soft)}
+  .stat-val{font-size:26px}
+  .floor{--s:.66;aspect-ratio:4/3}
+  .tbl-meta,.z-window{display:none}
+  .concierge{width:100%}
+  .board{grid-auto-columns:80vw}
+  .toast{bottom:92px}
+}
+/* ---- Topbar bell ---- */
+.topline{position:relative;gap:10px}
+.tools{display:flex;align-items:center;gap:10px;margin-left:auto}
+.bell{position:relative;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--char);display:grid;place-items:center;color:var(--chicory);flex:none}
+.bell:hover{color:var(--crema);border-color:var(--chicory)}
+.bell-dot{position:absolute;top:5px;right:6px;min-width:15px;height:15px;padding:0 3px;border-radius:999px;background:var(--brass);color:var(--brass-ink);font-size:10px;font-weight:700;display:grid;place-items:center;line-height:1}
+.bell-panel{position:absolute;top:44px;right:0;width:340px;max-width:calc(100vw - 32px);background:var(--char);border:1px solid var(--line);border-radius:14px;box-shadow:0 20px 50px rgba(0,0,0,.5);z-index:50;overflow:hidden;display:none}
+.bell-panel.open{display:block}
+.bell-head{padding:14px 16px;border-bottom:1px solid var(--line-soft);font-weight:600;font-size:14px}
+.bell-list{list-style:none;margin:0;padding:6px;max-height:360px;overflow-y:auto}
+.bell-item{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;border:0;background:none;border-radius:10px;padding:10px;color:var(--crema);font-size:13px}
+.bell-item:hover{background:rgba(242,238,231,.05)}
+.bell-item i{width:8px;height:8px;border-radius:50%;margin-top:5px;flex:none;background:var(--dim)}
+.bell-item .b-amber{background:var(--amber)} .bell-item .b-rose{background:var(--rose)} .bell-item .b-brass{background:var(--brass)}
+.bell-item div span{display:block;color:var(--dim);font-size:12px;margin-top:2px}
+.bell-empty{padding:22px 16px;text-align:center;color:var(--dim);font-size:13px}
+
+/* ---- Ring gauge ---- */
+.ring-wrap{display:flex;align-items:center;gap:16px}
+.ring{position:relative;width:104px;height:104px;flex:none}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:9}
+.ring .track{stroke:var(--line)}
+.ring .fill{stroke:var(--brass);stroke-linecap:round;transition:stroke-dashoffset .6s ease}
+.ring-val{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring-val b{font-family:var(--serif);font-size:26px;color:var(--brass-lt);line-height:1;font-variation-settings:"opsz" 60}
+.ring-val small{font-size:11px;color:var(--dim);margin-top:2px}
+.ratings-list{list-style:none;margin:14px 0 0;padding-top:12px;border-top:1px solid var(--line-soft);display:flex;flex-direction:column;gap:11px}
+.ratings-list li{font-size:13px}
+.r-top{display:flex;justify-content:space-between;gap:8px}
+.stars{color:var(--brass);letter-spacing:1px;font-size:12px}
+.r-cmt{color:var(--chicory);margin-top:2px}
+
+/* ---- Modal system (walk-in, new booking, split bill) ---- */
+.modal-scrim{position:fixed;inset:0;background:rgba(10,9,8,.6);z-index:80;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-scrim.open{display:flex}
+.modal{background:var(--char);border:1px solid var(--line);border-radius:16px;width:100%;max-width:420px;max-height:90vh;overflow-y:auto;box-shadow:0 30px 70px rgba(0,0,0,.55)}
+.modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:18px 20px 4px}
+.modal-head h2{font-size:19px}
+.modal-x{width:30px;height:30px;border-radius:50%;border:1px solid var(--line);background:none;color:var(--chicory);display:grid;place-items:center;flex:none}
+.modal-body{padding:14px 20px 20px;display:flex;flex-direction:column;gap:13px}
+.field label{display:block;font-size:13px;color:var(--chicory);margin-bottom:5px}
+.field input,.field select{width:100%;background:var(--char2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;color:var(--crema)}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.field-hint{font-size:12px;color:var(--dim);margin-top:5px}
+.field-hint.warn{color:var(--amber)}
+.modal-foot{display:flex;justify-content:flex-end;gap:8px;padding-top:4px}
+.split-rows{display:flex;flex-direction:column;gap:8px}
+.split-row{display:flex;justify-content:space-between;align-items:center;background:var(--char2);border:1px solid var(--line-soft);border-radius:10px;padding:9px 12px;font-size:14px}
+.split-row .sent{color:var(--sage);font-size:12px}
+.split-amt{display:flex;align-items:center;gap:4px;color:var(--chicory)}
+.split-input{width:84px;background:var(--roast);border:1px solid var(--line);border-radius:8px;padding:5px 8px;color:var(--crema);text-align:right;font-variant-numeric:tabular-nums}
+#splitSumNote{font-size:12px;color:var(--dim);margin-top:-2px}
+#splitSumNote.warn{color:var(--amber)}
+
+/* ---- Item checklist on tickets / floor detail ---- */
+.check-items{list-style:none;margin:12px 0 0;padding:10px 0 0;border-top:1px dashed var(--line);font-size:14px;display:flex;flex-direction:column;gap:3px}
+.check-item{display:flex;align-items:center;gap:9px;padding:5px 4px;border-radius:8px}
+.check-item:hover{background:rgba(242,238,231,.04)}
+.check-item input[type=checkbox]{width:17px;height:17px;accent-color:var(--brass);flex:none}
+.check-spacer{width:17px;flex:none}
+.ci-main{flex:1;display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0}
+.ci-name{flex:1;min-width:0}
+.check-item.done .ci-name{color:var(--dim);text-decoration:line-through}
+.ci-right{display:flex;align-items:center;gap:8px;flex:none}
+.ci-price{white-space:nowrap;color:var(--dim)}
+.qty-stepper{display:flex;align-items:center;gap:6px;flex:none}
+.qty-btn{width:22px;height:22px;border-radius:6px;border:1px solid var(--line);background:var(--char2);color:var(--crema);display:grid;place-items:center;font-size:14px;line-height:1;flex:none}
+.qty-btn:disabled{opacity:.35}
+.ci-remove{width:22px;height:22px;border-radius:6px;border:1px solid var(--line);background:none;color:var(--rose);display:grid;place-items:center;font-size:15px;line-height:1;flex:none}
+.check-note{font-size:12px;color:var(--dim);margin-top:8px}
+.bill-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.edit-toggle{background:none;border:1px solid var(--line);border-radius:8px;padding:3px 9px;font-size:12px;color:var(--chicory);flex:none}
+.edit-toggle:hover{color:var(--crema);border-color:var(--chicory)}
+.edit-toggle.on{color:var(--brass);border-color:var(--brass)}
+
+/* ---- Conversations ---- */
+.convo-list{list-style:none;margin:0;padding:0}
+.convo{border-bottom:1px solid var(--line-soft)}
+.convo:first-child{border-top:1px solid var(--line-soft)}
+.convo-row{width:100%;display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;gap:14px;padding:14px 6px;background:none;border:0;color:var(--crema);text-align:left}
+.convo-row:hover{background:rgba(242,238,231,.03)}
+.convo-av{width:36px;height:36px;border-radius:50%;background:var(--char2);border:1px solid var(--line);display:grid;place-items:center;font-size:12px;font-weight:600;color:var(--brass);flex:none}
+.convo-name-wrap{display:flex;flex-direction:column;gap:2px;min-width:0}
+.convo-snip{display:block;color:var(--dim);font-size:13px;max-width:56ch;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.convo-time{color:var(--dim);font-size:13px;white-space:nowrap}
+.convo-thread{display:none;padding:4px 6px 20px 58px}
+.convo.open .convo-thread{display:block}
+.convo.open .chev{transform:rotate(180deg)}
+.chev{transition:transform .2s;color:var(--dim)}
+.convo-thread .msg{max-width:70%}
+
+/* ---- Day detail ---- */
+.day-back{display:inline-flex;align-items:center;gap:6px;color:var(--brass);background:none;border:0;font-size:14px;margin-bottom:16px}
+.day-back:hover{text-decoration:underline}
+.day-stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}
+.hourbars{display:flex;align-items:flex-end;gap:6px;height:110px;margin-top:10px}
+.hourbars .hb{flex:1;background:var(--brass);border-radius:4px 4px 0 0;min-height:3px;position:relative}
+.hourbars .hb span{position:absolute;bottom:-20px;left:0;right:0;text-align:center;font-size:10px;color:var(--dim)}
+.top-items-list{list-style:none;margin:0;padding:0}
+.top-items-list li{display:flex;justify-content:space-between;padding:10px 0;border-top:1px solid var(--line-soft);font-size:14px}
+.top-items-list .sub{display:block;color:var(--dim);font-size:13px;margin-top:2px}
+.top-items-list li:first-child{border-top:0}
+
+/* ---- Misc ---- */
+.sub-phone{display:block;color:var(--dim);font-size:12px;font-variant-numeric:tabular-nums}
+.bar-clickable{cursor:pointer}
+.today-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.today-grid .span-2{grid-column:1/-1}
+@media (max-width:1020px){.bell-panel{right:-8px}}
+@media (max-width:760px){
+  .today-grid{grid-template-columns:1fr}
+  .day-stat-row{grid-template-columns:1fr}
+  .convo-row{grid-template-columns:auto 1fr;grid-template-areas:"av name" "av snip";row-gap:2px}
+  .convo-time,.chev{display:none}
+  .convo-thread{padding-left:6px}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <nav class="side" aria-label="Main">
+    <div class="brand">
+      <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true"><path d="M10.5 5h11l-1.4 13.5h-8.2z" fill="none" stroke="#D9A76B" stroke-width="1.6" stroke-linejoin="round"/><path d="M4.5 20.5h23l-2.6 6h-17.8z" fill="#D9A76B"/></svg>
+      <div class="brand-name">The Talisman<span class="brand-sub">Coffee — Manager</span></div>
+    </div>
+    <div class="nav">
+      <button class="nav-btn" data-view="today" aria-current="page">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h12v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M16 11h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M8 3.5v2.5M12 3.5v2.5"/></svg>
+        <span class="nav-label">Today</span></button>
+      <button class="nav-btn" data-view="reservations">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>
+        <span class="nav-label">Reservations</span><span class="nav-count" id="countRes"></span></button>
+      <button class="nav-btn" data-view="orders">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg>
+        <span class="nav-label">Orders</span><span class="nav-count" id="countOrders"></span></button>
+      <button class="nav-btn" data-view="guests">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6 6 0 0 1 3.5 6"/></svg>
+        <span class="nav-label">Guests</span><span class="nav-count" id="countGuests"></span></button>
+      <button class="nav-btn" data-view="conversations">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4.5h16v12H9l-4 3.5v-3.5H4z"/><path d="M8 9.5h8M8 12.5h5"/></svg>
+        <span class="nav-label">Conversations</span><span class="nav-count" id="countConvo"></span></button>
+      <button class="nav-btn" id="alfredNavBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg>
+        <span class="nav-label"><span class="lbl-full">Message Alfred</span><span class="lbl-short">Alfred</span></span></button>
+    </div>
+    <div class="side-foot"><span class="avatar">RS</span><div class="who">Rohan Shetty<span>Floor manager</span></div></div>
+  </nav>
+
+  <main class="main" id="main">
+    <div class="topline">
+      <span class="m-brand">The Talisman</span><span id="clock"></span>
+      <div class="tools">
+        <span class="badge">Concept build with sample data</span>
+        <button class="bell" id="bellBtn" aria-haspopup="true" aria-expanded="false" aria-label="Notifications">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 0 1 12 0c0 4 1.5 5.5 2 6H4c.5-.5 2-2 2-6Z"/><path d="M10 19a2 2 0 0 0 4 0"/></svg>
+          <span class="bell-dot" id="bellDot" hidden>0</span>
+        </button>
+        <div class="bell-panel" id="bellPanel"><div class="bell-head">Needs your attention</div><ul class="bell-list" id="bellList"></ul></div>
+      </div>
+    </div>
+
+    <section class="view" id="view-today" aria-labelledby="greet">
+      <div class="page-head"><div><h1 id="greet">Good afternoon, Rohan.</h1><p class="lede" id="lede"></p></div></div>
+      <div class="strip" id="stats"></div>
+      <div class="today-grid">
+        <div class="panel span-2">
+          <div class="panel-head"><h2>The floor right now</h2>
+            <div class="legend"><span><i class="lg-seated"></i>Seated</span><span><i class="lg-soon"></i>Arriving within 90 min</span><span><i class="lg-free"></i>Free</span></div></div>
+          <div class="floor" id="floor">
+            <span class="window" aria-hidden="true"></span><span class="zone z-window" aria-hidden="true">Window</span>
+            <div class="bar" aria-hidden="true">Brew bar</div>
+            <span class="door" aria-hidden="true"></span><span class="zone z-door" aria-hidden="true">Entrance</span>
+          </div>
+          <div class="floor-detail" id="floorDetail" aria-live="polite"></div>
+          <div id="floorOrders"></div>
+        </div>
+        <div class="panel"><div class="panel-head"><h2>Up next</h2><button class="link" data-go="reservations">All bookings</button></div><ol class="timeline" id="upnext"></ol></div>
+        <div class="panel"><div class="panel-head"><h2>Activity</h2><span class="dim small">Newest first</span></div><ul class="feed" id="feed"></ul></div>
+        <div class="panel"><div class="panel-head"><h2>Guest ratings</h2><button class="link" data-go="guests">Going quiet</button></div>
+          <div class="ring-wrap"><div class="ring"><svg viewBox="0 0 100 100"><circle class="track" cx="50" cy="50" r="42"/><circle class="fill" id="ratingRing" cx="50" cy="50" r="42"/></svg><div class="ring-val"><b id="ratingVal"></b><small>out of 5</small></div></div>
+            <div><div class="stat-label" style="margin-bottom:3px">Average rating</div><div class="dim small" id="ratingCount"></div></div></div>
+          <ul class="ratings-list" id="ratings"></ul>
+        </div>
+        <div class="panel span-2"><div class="panel-head"><h2>This week's takings</h2><span class="dim small num" id="weekTotal"></span></div><div class="week" id="week"></div></div>
+      </div>
+    </section>
+
+    <section class="view" id="view-reservations" hidden>
+      <div class="page-head"><div><h1>Reservations</h1><p class="lede">Bookings from WhatsApp, Alfred, phone calls and walk-ins, in one list.</p></div>
+        <button class="btn primary" id="newBookingBtn">+ New booking</button></div>
+      <div class="seg" id="resFilter" role="group" aria-label="Show bookings" style="margin-bottom:16px">
+        <button data-f="today">Today</button><button data-f="tomorrow">Tomorrow</button><button data-f="upcoming">All upcoming</button><button data-f="cancelled">Cancelled</button></div>
+      <div class="panel flush"><div class="tablewrap"><table class="data" id="resTable"></table></div></div>
+    </section>
+
+    <section class="view" id="view-orders" hidden>
+      <div class="page-head"><div><h1>Orders</h1><p class="lede">Tick items off as they're made. An order moves itself once every item on it is done.</p></div></div>
+      <div class="board" id="board"></div>
+    </section>
+
+    <section class="view" id="view-guests" hidden>
+      <div class="page-head"><div><h1>Guests</h1><p class="lede">Everyone who has booked or ordered, plus the regulars you haven't seen in a while.</p></div>
+        <input class="search" id="guestSearch" type="search" placeholder="Search by name or usual order" aria-label="Search guests"></div>
+      <div class="guests-grid">
+        <div class="panel flush"><div class="tablewrap"><table class="data" id="guestTable"></table></div></div>
+        <div class="panel"><div class="panel-head"><h2>Going quiet</h2></div>
+          <p class="muted small" style="margin:0">Regulars who haven't visited in three weeks or more. A small offer on WhatsApp is often enough to bring them back.</p>
+          <ul class="quiet-list" id="quiet"></ul></div>
+      </div>
+    </section>
+
+    <section class="view" id="view-conversations" hidden>
+      <div class="page-head"><div><h1>Conversations</h1><p class="lede">Everything Alfred has said to guests on WhatsApp. Anything he couldn't handle is flagged for a reply.</p></div>
+        <div class="seg" id="convoFilter" role="group" aria-label="Show conversations">
+          <button data-cf="all">All</button><button data-cf="needs">Needs a reply</button></div></div>
+      <div class="panel flush"><ul class="convo-list" id="convoList"></ul></div>
+    </section>
+
+    <section class="view" id="view-daydetail" hidden>
+      <button class="day-back" id="dayBack">&larr; Back to Today</button>
+      <div class="page-head"><div><h1 id="dayTitle"></h1><p class="lede" id="daySub"></p></div></div>
+      <div class="day-stat-row">
+        <div class="panel"><div class="stat-val" id="dayTotal"></div><div class="stat-label">Taken that day</div></div>
+        <div class="panel"><div class="stat-val" id="dayOrders"></div><div class="stat-label">Orders served</div></div>
+        <div class="panel"><div class="stat-val" id="dayAvg"></div><div class="stat-label">Average order value</div></div>
+      </div>
+      <div class="today-grid">
+        <div class="panel"><h2>By the hour</h2><div class="hourbars" id="dayHours"></div></div>
+        <div class="panel span-2"><h2>Best sellers that day</h2><ul class="top-items-list" id="dayTopItems"></ul></div>
+        <div class="panel span-2"><div class="panel-head"><h2>Who ordered what</h2><span class="dim small" id="dayOrdersNote"></span></div>
+          <div class="tablewrap"><table class="data" id="dayOrdersTable"></table></div></div>
+      </div>
+    </section>
+  </main>
+
+  <aside class="concierge" id="concierge" aria-label="Message Alfred demo">
+    <div class="cg-head">
+      <div><h2>Message Alfred</h2><p>Alfred is the AI that answers guests on WhatsApp. Message him as a guest and watch the dashboard update.</p></div>
+      <button class="cg-close" id="cgClose" aria-label="Close"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <label class="as">Message as <select id="persona"></select></label>
+    <div class="chat" id="chat" aria-live="polite"></div>
+    <div class="chips" id="chips"></div>
+    <form class="composer" id="composer" autocomplete="off">
+      <input id="msg" type="text" placeholder="Type a message" aria-label="Message">
+      <button class="send" type="submit" aria-label="Send"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3.4 20.4 21 12 3.4 3.6l.1 6.5L15 12l-11.5 1.9z"/></svg></button>
+    </form>
+  </aside>
+</div>
+<div class="scrim" id="scrim"></div>
+<div class="toast" id="toast" role="status"></div>
+
+<!-- Walk-in modal -->
+<div class="modal-scrim" id="walkinScrim">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="walkinTitle">
+    <div class="modal-head"><h2 id="walkinTitle">Seat a walk-in</h2><button class="modal-x" data-close="walkin" aria-label="Close">&times;</button></div>
+    <form class="modal-body" id="walkinForm">
+      <p class="dim small" id="walkinTableNote" style="margin:0"></p>
+      <div class="field"><label for="walkinName">Guest name</label><input id="walkinName" type="text" placeholder="Leave blank for “Walk-in”"></div>
+      <div class="field"><label for="walkinPhone">Phone (optional)</label><input id="walkinPhone" type="tel" placeholder="98765 43210"></div>
+      <div class="modal-foot"><button type="button" class="btn quiet" data-close="walkin">Cancel</button><button type="submit" class="btn primary">Seat guest</button></div>
+    </form>
+  </div>
+</div>
+
+<!-- Manual new booking modal -->
+<div class="modal-scrim" id="bookingScrim">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="bookingTitle">
+    <div class="modal-head"><h2 id="bookingTitle">New booking</h2><button class="modal-x" data-close="booking" aria-label="Close">&times;</button></div>
+    <form class="modal-body" id="bookingForm">
+      <div class="field"><label for="bkName">Guest name</label><input id="bkName" type="text" required></div>
+      <div class="field"><label for="bkPhone">Phone</label><input id="bkPhone" type="tel" placeholder="98765 43210" required></div>
+      <div class="field-row">
+        <div class="field"><label for="bkDate">Date</label><select id="bkDate"><option value="D0">Today</option><option value="D1">Tomorrow</option><option value="D2">Day after</option></select></div>
+        <div class="field"><label for="bkGuests">Guests</label><input id="bkGuests" type="number" min="1" max="12" value="2"></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label for="bkTime">Time</label><input id="bkTime" type="text" placeholder="e.g. 7:30 pm" required></div>
+        <div class="field"><label for="bkTable">Table</label><select id="bkTable"></select></div>
+      </div>
+      <p class="field-hint" id="bkHint"></p>
+      <div class="field"><label for="bkSource">Came in via</label><select id="bkSource"><option>Phone</option><option>Walk-in</option><option>Staff</option></select></div>
+      <div class="modal-foot"><button type="button" class="btn quiet" data-close="booking">Cancel</button><button type="submit" class="btn primary">Book table</button></div>
+    </form>
+  </div>
+</div>
+
+<!-- Split bill modal -->
+<div class="modal-scrim" id="splitScrim">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="splitTitle">
+    <div class="modal-head"><h2 id="splitTitle">Send bill</h2><button class="modal-x" data-close="split" aria-label="Close">&times;</button></div>
+    <div class="modal-body">
+      <p class="dim small" id="splitTotalLine" style="margin:0"></p>
+      <div class="field"><label for="splitWays">Split into how many ways?</label><input id="splitWays" type="number" min="1" max="10" value="1"></div>
+      <div class="split-rows" id="splitRows"></div>
+      <p id="splitSumNote"></p>
+      <div class="modal-foot"><button type="button" class="btn quiet" data-close="split">Close</button><button type="button" class="btn primary" id="splitSend">Send</button></div>
+    </div>
+  </div>
+</div>
+<script>
+(() => {
+'use strict';
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* ---------- Time helpers (demo clock starts in the lunch rush) ---------- */
+const TODAY = new Date(); TODAY.setHours(0, 0, 0, 0);
+const addDays = n => { const d = new Date(TODAY); d.setDate(d.getDate() + n); return d; };
+const iso = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+const D0 = iso(TODAY), D1 = iso(addDays(1)), D2 = iso(addDays(2));
+const START = 13 * 60 + 15, LOADED = Date.now();
+const nowMin = () => Math.min(START + Math.floor((Date.now() - LOADED) / 60000), 21 * 60 + 59);
+const toMin = t => { const [h, m] = t.split(':').map(Number); return h * 60 + m; };
+const hhmm = m => `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
+const fmtTime = t => { let [h, m] = t.split(':').map(Number); const ap = h >= 12 ? 'pm' : 'am'; h = h % 12 || 12; return `${h}:${String(m).padStart(2, '0')} ${ap}`; };
+const shortTime = t => fmtTime(t).replace(/ (am|pm)$/, '');
+const dateObj = s => new Date(s + 'T00:00:00');
+const fmtDate = s => s === D0 ? 'Today' : s === D1 ? 'Tomorrow' : dateObj(s).toLocaleDateString('en-IN', {weekday: 'short', day: 'numeric', month: 'short'});
+const dateWords = s => s === D0 ? 'today' : s === D1 ? 'tomorrow' : 'on ' + dateObj(s).toLocaleDateString('en-IN', {weekday: 'long', day: 'numeric', month: 'long'});
+const hiDate = s => s === D0 ? 'Aaj' : s === D1 ? 'Kal' : dateObj(s).toLocaleDateString('en-IN', {weekday: 'long'});
+const inr = n => '₹' + Math.round(n).toLocaleString('en-IN');
+const weekdayName = TODAY.toLocaleDateString('en-IN', {weekday: 'long'});
+function phoneFor(name) {
+  let h = 0; for (let i = 0; i < name.length; i++) h = (h * 131 + name.charCodeAt(i)) >>> 0;
+  let s = String(h % 9000000000).padStart(9, '0');
+  s = '6789'[h % 4] + s;
+  return s.slice(0, 5) + ' ' + s.slice(5);
+}
+
+/* ---------- Sample data ---------- */
+const TABLES = [
+  {id: 'T1', seats: 2, shape: 'round',  x: 9,  y: 22},
+  {id: 'T2', seats: 2, shape: 'round',  x: 9,  y: 52},
+  {id: 'T3', seats: 2, shape: 'round',  x: 9,  y: 82},
+  {id: 'T4', seats: 4, shape: 'square', x: 30, y: 28},
+  {id: 'T5', seats: 4, shape: 'square', x: 30, y: 74},
+  {id: 'T6', seats: 4, shape: 'square', x: 50, y: 28},
+  {id: 'T7', seats: 4, shape: 'square', x: 50, y: 74},
+  {id: 'T8', seats: 6, shape: 'long',   x: 70, y: 51},
+  {id: 'T10', seats: 2, shape: 'round', x: 86, y: 56},
+  {id: 'T9', seats: 2, shape: 'round',  x: 86, y: 80},
+];
+
+const MENU = [
+  {id: 'kaapi', name: 'Filter Kaapi', price: 90, cat: 'Coffee', alias: ['filter kaapi', 'filter coffee', 'kaapi', 'filter']},
+  {id: 'coldbrew', name: 'Noir Cold Brew', price: 190, cat: 'Coffee', alias: ['noir cold brew', 'cold brew', 'coldbrew']},
+  {id: 'capp', name: 'Cappuccino', price: 170, cat: 'Coffee', alias: ['cappuccino', 'cappucino', 'capp']},
+  {id: 'jlatte', name: 'Jaggery Latte', price: 210, cat: 'Coffee', alias: ['jaggery latte', 'latte']},
+  {id: 'chai', name: 'Masala Chai', price: 80, cat: 'Tea', alias: ['masala chai', 'chai', 'tea']},
+  {id: 'dosa', name: 'Benne Dosa', price: 160, cat: 'Kitchen', alias: ['benne dosa', 'butter dosa', 'dosa']},
+  {id: 'toast', name: 'Mushroom Toast', price: 240, cat: 'Kitchen', alias: ['mushroom toast', 'toast']},
+  {id: 'bread', name: 'Banana Bread', price: 150, cat: 'Bakes', alias: ['banana bread']},
+  {id: 'tart', name: 'Dark Chocolate Tart', price: 220, cat: 'Bakes', alias: ['dark chocolate tart', 'chocolate tart', 'choco tart', 'tart']},
+];
+const byId = Object.fromEntries(MENU.map(m => [m.id, m]));
+const it = (id, qty, served) => ({id, qty, served});
+
+const RES = [
+  {id: 'R-318', name: 'Aditya Naik', guests: 2, date: D0, time: '12:40', table: 'T1', status: 'seated', src: 'Walk-in'},
+  {id: 'R-319', name: 'Leela Menon', guests: 4, date: D0, time: '12:50', table: 'T4', status: 'seated', src: 'WhatsApp'},
+  {id: 'R-320', name: 'Rohit Desai', guests: 3, date: D0, time: '13:00', table: 'T6', status: 'seated', src: 'Phone'},
+  {id: 'R-321', name: 'Brightline Studio', guests: 6, date: D0, time: '12:30', table: 'T8', status: 'seated', src: 'WhatsApp', note: 'Team lunch'},
+  {id: 'R-322', name: 'Meera Iyer', guests: 2, date: D0, time: '13:45', table: 'T2', status: 'confirmed', src: 'Alfred'},
+  {id: 'R-323', name: 'Farah Siddiqui', guests: 4, date: D0, time: '14:00', table: 'T5', status: 'confirmed', src: 'WhatsApp'},
+  {id: 'R-324', name: 'Nikhil Bhat', guests: 2, date: D0, time: '14:15', table: 'T9', status: 'pending', src: 'Alfred'},
+  {id: 'R-325', name: 'Pooja Shetty', guests: 4, date: D0, time: '19:00', table: 'T6', status: 'confirmed', src: 'Alfred', note: 'Birthday. Bring the candle.'},
+  {id: 'R-326', name: 'Karan Mehra', guests: 5, date: D0, time: '19:30', table: 'T8', status: 'confirmed', src: 'Phone'},
+  {id: 'R-327', name: 'Ananya Rao', guests: 2, date: D0, time: '20:00', table: 'T3', status: 'confirmed', src: 'WhatsApp'},
+  {id: 'R-328', name: 'Vikram Joshi', guests: 3, date: D0, time: '20:30', table: 'T4', status: 'cancelled', src: 'WhatsApp'},
+  {id: 'R-329', name: 'Imran Patel', guests: 2, date: D1, time: '09:30', table: 'T1', status: 'confirmed', src: 'Alfred'},
+  {id: 'R-330', name: 'Tanvi Kulkarni', guests: 6, date: D1, time: '13:00', table: 'T8', status: 'confirmed', src: 'WhatsApp', note: 'Asked for the window side'},
+  {id: 'R-331', name: 'Siddharth Gowda', guests: 4, date: D1, time: '19:30', table: 'T7', status: 'pending', src: 'Alfred'},
+  {id: 'R-332', name: 'Divya Prabhu', guests: 2, date: D2, time: '18:00', table: 'T10', status: 'confirmed', src: 'WhatsApp'},
+];
+
+const ORDERS = [
+  {id: 'KN-1029', guest: 'Imran Patel', items: [it('kaapi',1,true), it('bread',1,true)], type: 'Pickup', stage: 'done', placed: '11:40', paid: true, src: 'Alfred'},
+  {id: 'KN-1031', guest: 'Leela Menon', items: [it('capp',2,true), it('toast',2,true)], type: 'Table T4', stage: 'done', placed: '12:58', paid: false},
+  {id: 'KN-1032', guest: 'Brightline Studio', items: [it('kaapi',4,true), it('coldbrew',2,true), it('dosa',6,true)], type: 'Table T8', stage: 'ready', placed: '12:52', paid: false},
+  {id: 'KN-1033', guest: 'Aditya Naik', items: [it('jlatte',1,true), it('bread',1,true)], type: 'Table T1', stage: 'done', placed: '12:44', paid: false},
+  {id: 'KN-1034', guest: 'Rohit Desai', items: [it('chai',3,true), it('dosa',3,false)], type: 'Table T6', stage: 'brewing', placed: '13:06', paid: false},
+  {id: 'KN-1035', guest: 'Sneha Kamath', items: [it('coldbrew',2,false)], type: 'Pickup', stage: 'brewing', placed: '13:09', paid: true, src: 'WhatsApp'},
+  {id: 'KN-1036', guest: 'Arjun Hegde', items: [it('kaapi',2,false), it('tart',1,false)], type: 'Delivery', stage: 'new', placed: '13:12', paid: false, src: 'WhatsApp'},
+  {id: 'KN-1037', guest: 'Harsha V', items: [it('capp',1,false)], type: 'Pickup', stage: 'new', placed: '13:14', paid: false, src: 'Alfred'},
+];
+
+const GUESTS = [
+  {name: 'Meera Iyer', visits: 42, last: 2, usual: 'Jaggery Latte', spend: 18640},
+  {name: 'Imran Patel', visits: 27, last: 0, usual: 'Filter Kaapi', spend: 7310},
+  {name: 'Kavya Hegde', visits: 23, last: 34, usual: 'Filter Kaapi', spend: 8470},
+  {name: 'Sunil Pai', visits: 21, last: 41, usual: 'Filter Kaapi', spend: 5880},
+  {name: 'Leela Menon', visits: 19, last: 0, usual: 'Cappuccino', spend: 9820},
+  {name: 'Vikram Joshi', visits: 16, last: 27, usual: 'Benne Dosa', spend: 6950},
+  {name: 'Rohit Desai', visits: 14, last: 0, usual: 'Masala Chai', spend: 5260},
+  {name: 'Tanvi Kulkarni', visits: 12, last: 15, usual: 'Noir Cold Brew', spend: 5410},
+  {name: 'Farah Siddiqui', visits: 11, last: 6, usual: 'Noir Cold Brew', spend: 6130},
+  {name: 'Pooja Shetty', visits: 9, last: 12, usual: 'Dark Chocolate Tart', spend: 4480},
+  {name: 'Aditya Naik', visits: 8, last: 0, usual: 'Jaggery Latte', spend: 3120},
+  {name: 'Ananya Rao', visits: 6, last: 9, usual: 'Cappuccino', spend: 2210},
+  {name: 'Divya Prabhu', visits: 5, last: 23, usual: 'Banana Bread', spend: 1680},
+  {name: 'Nikhil Bhat', visits: 4, last: 18, usual: 'Mushroom Toast', spend: 1540},
+];
+
+const FEED = [
+  {t: '13:14', text: 'Alfred took order KN-1037 from Harsha V', k: 'order'},
+  {t: '13:12', text: 'Arjun Hegde ordered for delivery, payment pending', k: 'order'},
+  {t: '13:06', text: "Rohit Desai's party of 3 seated at T6", k: 'seat'},
+  {t: '12:58', text: 'Alfred confirmed Meera Iyer for 1:45 pm', k: 'book'},
+  {t: '12:41', text: "Vikram Joshi cancelled tonight's table", k: 'cancel'},
+  {t: '12:20', text: 'Alfred booked Pooja Shetty at T6 for a birthday at 7 pm', k: 'book'},
+  {t: '11:52', text: 'A question about parking was passed to staff', k: 'staff'},
+];
+
+const RATINGS = [
+  {guest: 'Meera Iyer', stars: 5, comment: 'The jaggery latte is unreal. My order was ready before I even sat down.', t: '11:20'},
+  {guest: 'Karan Mehra', stars: 4, comment: 'Great coffee, a bit of a wait on the dosa at lunchtime.', t: 'Yesterday'},
+  {guest: 'Farah Siddiqui', stars: 5, comment: 'Booked a table over WhatsApp in ten seconds. Loved that.', t: 'Yesterday'},
+  {guest: 'Sunil Pai', stars: 3, comment: 'Good coffee, but my usual table was taken when I walked in.', t: '2 days ago'},
+  {guest: 'Tanvi Kulkarni', stars: 5, comment: 'Window seat, exactly as I asked for. Perfect.', t: '3 days ago'},
+];
+
+const CONVOS = [
+  {id: 'C-901', guest: 'Farah Siddiqui', status: 'handled', t: '14:00', messages: [
+    {who: 'me', text: 'Table for 4 today at 2pm please'},
+    {who: 'bot', text: "Done! You're booked for 4 today at 2:00 pm, table T5. We'll send a reminder an hour before."}]},
+  {id: 'C-902', guest: 'Karan Mehra', status: 'handled', t: '13:40', messages: [
+    {who: 'me', text: '5 log ke liye aaj raat 7:30 baje table chahiye'},
+    {who: 'bot', text: "Ho gaya! Aaj 7:30 pm pe 5 logon ke liye table T8 book hai. Ek ghanta pehle reminder bhej denge."}]},
+  {id: 'C-903', guest: 'Nikhil Bhat', status: 'needs', t: '13:20', messages: [
+    {who: 'me', text: 'Can you fit us in earlier, maybe 1:30 instead of 2:15? We have 5 people actually, not 2'},
+    {who: 'bot', text: "For groups bigger than 6 we join tables, so I've passed this to the team. They'll confirm here on WhatsApp shortly."}]},
+  {id: 'C-904', guest: 'Sneha Kamath', status: 'handled', t: '13:09', messages: [
+    {who: 'me', text: '2 noir cold brew for pickup'},
+    {who: 'bot', text: "2 × Noir Cold Brew\n\nThat's ₹380 for pickup. I've sent you a UPI link, and we'll start as soon as it's paid."},
+    {who: 'me', text: 'paid'},
+    {who: 'bot', text: 'Payment received, thank you! Order KN-1035 is on the bar now.'}]},
+  {id: 'C-905', guest: 'Rahul Bhandari', status: 'needs', t: '12:47', messages: [
+    {who: 'me', text: 'the espresso machine sound is really loud today is everything ok'},
+    {who: 'bot', text: "I'm not sure about that one, so I've passed your message to the team. Someone will reply here shortly."}]},
+  {id: 'C-906', guest: 'Pooja Shetty', status: 'handled', t: '12:20', messages: [
+    {who: 'me', text: "Booking a table for my sister's birthday, 4 people, 7pm today. Can you have a candle ready?"},
+    {who: 'bot', text: "Done! You're booked for 4 today at 7:00 pm, table T6. We'll send a reminder an hour before."},
+    {who: 'me', text: 'and the candle?'},
+    {who: 'bot', text: "Noted, we'll have a candle ready on the table. See you at 7!"}]},
+  {id: 'C-907', guest: 'Imran Patel', status: 'handled', t: '11:38', messages: [
+    {who: 'me', text: 'usual please, pickup'},
+    {who: 'bot', text: 'Hi Imran, good to hear from you! Shall I get your usual Filter Kaapi ready for pickup?'},
+    {who: 'me', text: 'yes'},
+    {who: 'bot', text: "1 × Filter Kaapi\n\nThat's ₹90 for pickup. I've sent you a UPI link, and we'll start as soon as it's paid."}]},
+];
+
+const DAY_DETAILS = [
+  {total: 21480, orders: 44, avg: 488, top: [['Filter Kaapi',58,5220],['Benne Dosa',31,4960],['Cappuccino',27,4590]], hours: [18,24,34,30,22,19,13],
+   sample: [
+     ['Rohit Desai','8:20 am',[['kaapi',2],['dosa',1]],340],['Farah Siddiqui','9:05 am',[['capp',1],['toast',1]],410],
+     ['Sunil Pai','11:40 am',[['kaapi',1]],90],['Tanvi Kulkarni','12:30 pm',[['dosa',2],['coldbrew',1]],510],
+     ['Karan Mehra','1:15 pm',[['capp',3]],510],['Divya Prabhu','3:50 pm',[['bread',1],['chai',1]],230],
+     ['Meera Iyer','5:20 pm',[['jlatte',1]],210],['Ananya Rao','7:10 pm',[['kaapi',2],['tart',1]],400]]},
+  {total: 18920, orders: 39, avg: 485, top: [['Cappuccino',33,5610],['Masala Chai',40,3200],['Mushroom Toast',15,3600]], hours: [15,20,29,26,19,16,11],
+   sample: [
+     ['Imran Patel','8:15 am',[['kaapi',1],['bread',1]],240],['Vikram Joshi','9:30 am',[['chai',2],['dosa',1]],320],
+     ['Pooja Shetty','11:10 am',[['capp',1],['tart',1]],390],['Nikhil Bhat','12:45 pm',[['toast',1]],240],
+     ['Leela Menon','2:20 pm',[['capp',2]],340],['Aditya Naik','4:00 pm',[['jlatte',1]],210],
+     ['Kavya Hegde','6:15 pm',[['chai',3],['toast',1]],480],['Rohit Desai','7:40 pm',[['capp',1],['dosa',1]],330]]},
+  {total: 24310, orders: 51, avg: 477, top: [['Filter Kaapi',64,5760],['Noir Cold Brew',28,5320],['Benne Dosa',29,4640]], hours: [21,27,38,35,26,22,15],
+   sample: [
+     ['Farah Siddiqui','8:05 am',[['coldbrew',1]],190],['Sunil Pai','9:20 am',[['kaapi',2]],180],
+     ['Meera Iyer','10:50 am',[['jlatte',1],['bread',1]],360],['Karan Mehra','12:30 pm',[['dosa',2]],320],
+     ['Tanvi Kulkarni','1:45 pm',[['coldbrew',2],['toast',1]],620],['Divya Prabhu','3:15 pm',[['kaapi',1]],90],
+     ['Ananya Rao','5:40 pm',[['capp',1],['dosa',1]],330],['Vikram Joshi','7:25 pm',[['coldbrew',1],['tart',1]],410]]},
+  {total: 26740, orders: 55, avg: 486, top: [['Jaggery Latte',37,7770],['Filter Kaapi',61,5490],['Dark Chocolate Tart',22,4840]], hours: [23,30,41,38,28,23,17],
+   sample: [
+     ['Pooja Shetty','8:30 am',[['jlatte',1],['tart',1]],430],['Nikhil Bhat','9:50 am',[['kaapi',1]],90],
+     ['Leela Menon','11:20 am',[['jlatte',2]],420],['Aditya Naik','12:40 pm',[['kaapi',2],['dosa',1]],340],
+     ['Kavya Hegde','2:10 pm',[['tart',1]],220],['Rohit Desai','4:30 pm',[['jlatte',1],['toast',1]],450],
+     ['Imran Patel','6:00 pm',[['kaapi',1],['bread',1]],240],['Farah Siddiqui','7:50 pm',[['jlatte',1],['tart',1]],430]]},
+  {total: 19880, orders: 41, avg: 485, top: [['Filter Kaapi',52,4680],['Masala Chai',34,2720],['Banana Bread',24,3600]], hours: [16,21,30,27,20,17,12],
+   sample: [
+     ['Sunil Pai','8:10 am',[['chai',1],['bread',1]],230],['Meera Iyer','9:40 am',[['kaapi',1]],90],
+     ['Karan Mehra','11:00 am',[['bread',2]],300],['Tanvi Kulkarni','12:35 pm',[['chai',2],['kaapi',1]],250],
+     ['Divya Prabhu','2:15 pm',[['bread',1]],150],['Ananya Rao','4:20 pm',[['kaapi',2]],180],
+     ['Vikram Joshi','6:05 pm',[['chai',3]],240],['Farah Siddiqui','7:30 pm',[['kaapi',1],['bread',1]],240]]},
+  {total: 22150, orders: 46, avg: 481, top: [['Cappuccino',36,6120],['Benne Dosa',26,4160],['Noir Cold Brew',20,3800]], hours: [19,24,34,31,23,19,14],
+   sample: [
+     ['Nikhil Bhat','8:25 am',[['capp',1]],170],['Leela Menon','9:55 am',[['dosa',1],['capp',1]],330],
+     ['Aditya Naik','11:30 am',[['coldbrew',1]],190],['Kavya Hegde','1:05 pm',[['capp',2],['dosa',1]],500],
+     ['Rohit Desai','2:40 pm',[['coldbrew',2]],380],['Imran Patel','4:15 pm',[['capp',1]],170],
+     ['Pooja Shetty','6:30 pm',[['dosa',2]],320],['Sunil Pai','7:55 pm',[['coldbrew',1],['capp',1]],360]]},
+];
+const HOUR_LABELS = ['8', '10', '12', '2', '4', '6', '8'];
+
+
+const BASE_REV = 14620;          // takings before the tickets shown on the board
+const LAST_WEEK_BY_NOW = 17400;  // same weekday last week, same time
+const WEEK_PAST = DAY_DETAILS.map(d => d.total);
+
+let nextRes = 333, nextOrder = 1038, nextConvo = 908;
+let view = 'today', resFilter = 'today', selectedTable = null, guestQuery = '';
+let convoFilter = 'all', dayIndex = null, pendingBill = null, walkinTableId = null;
+const sessionChats = new Set();
+let escalations = 0;
+
+const orderTotal = o => o.items.reduce((s, x) => s + byId[x.id].price * x.qty, 0);
+const orderUnpaid = o => o.paid ? 0 : orderTotal(o);
+const revenueToday = () => BASE_REV + ORDERS.filter(o => o.paid).reduce((s, o) => s + orderTotal(o), 0);
+const active = r => r.status === 'seated' || r.status === 'confirmed' || r.status === 'pending';
+const tableOf = o => (o.type.match(/^Table (T\d+)/) || [])[1] || null;
+
+/* ---------- Rendering: clock, stats, nav counts, bell ---------- */
+function renderClock() {
+  $('#clock').textContent = `${TODAY.toLocaleDateString('en-IN', {weekday: 'long', day: 'numeric', month: 'long'})}, ${fmtTime(hhmm(nowMin()))}`;
+  const n = nowMin();
+  $('#greet').textContent = `${n < 720 ? 'Good morning' : n < 1020 ? 'Good afternoon' : 'Good evening'}, Rohan.`;
+}
+
+function renderStats() {
+  const today = RES.filter(r => r.date === D0 && r.status !== 'cancelled');
+  const covers = today.reduce((s, r) => s + r.guests, 0);
+  const toCome = today.filter(r => r.status === 'confirmed' || r.status === 'pending').reduce((s, r) => s + r.guests, 0);
+  const rev = revenueToday();
+  const pct = Math.round(rev / LAST_WEEK_BY_NOW * 100 - 100);
+  const open = ORDERS.filter(o => o.stage !== 'done');
+  const unpaidTotal = ORDERS.filter(o => !o.paid).reduce((s, o) => s + orderTotal(o), 0);
+  const chats = 52 + sessionChats.size, esc = 5 + escalations;
+  const handled = Math.round((chats - esc) / chats * 100);
+  $('#stats').innerHTML = [
+    [covers, 'Guests booked today', `${toCome} still to arrive`],
+    [inr(rev), 'Taken so far', `${pct >= 0 ? 'Up' : 'Down'} ${Math.abs(pct)}% on last ${weekdayName}`],
+    [open.length, 'Open orders', unpaidTotal ? `${inr(unpaidTotal)} not yet billed` : 'All paid'],
+    [chats, 'Alfred chats', `${handled}% handled without staff`],
+  ].map(([v, l, n]) => `<div class="stat"><div class="stat-val">${v}</div><div class="stat-label">${l}</div><div class="stat-note">${n}</div></div>`).join('');
+
+  const next = upcomingToday()[0];
+  const seatedNow = today.filter(r => r.status === 'seated').reduce((s, r) => s + r.guests, 0);
+  const service = nowMin() < 720 ? 'Breakfast' : nowMin() < 960 ? 'Lunch' : 'Evening';
+  $('#lede').textContent = `${service} service. ${seatedNow} guests at tables right now` +
+    (next ? `, and ${next.name} is next at ${fmtTime(next.time)}.` : ', with no more bookings today.');
+}
+
+function renderNavCounts() {
+  $('#countRes').textContent = upcomingToday().length || '';
+  $('#countOrders').textContent = ORDERS.filter(o => o.stage !== 'done').length || '';
+  $('#countGuests').textContent = GUESTS.length;
+  $('#countConvo').textContent = CONVOS.filter(c => c.status === 'needs').length || '';
+}
+
+function renderRatings() {
+  const avg = RATINGS.reduce((s, r) => s + r.stars, 0) / RATINGS.length;
+  const C = 2 * Math.PI * 42;
+  const ring = $('#ratingRing');
+  ring.style.strokeDasharray = C.toFixed(1);
+  ring.style.strokeDashoffset = (C * (1 - avg / 5)).toFixed(1);
+  $('#ratingVal').textContent = avg.toFixed(1);
+  $('#ratingCount').textContent = `From ${RATINGS.length} reviews this week`;
+  $('#ratings').innerHTML = RATINGS.slice(0, 4).map(r => `
+    <li><div class="r-top"><span><strong>${esc(r.guest)}</strong></span><span class="stars">${'★'.repeat(r.stars)}${'☆'.repeat(5 - r.stars)}</span></div>
+    <div class="r-cmt">“${esc(r.comment)}”</div></li>`).join('');
+}
+
+function billQueue() {
+  const list = [];
+  RES.filter(r => r.date === D0 && r.status === 'pending').forEach(r =>
+    list.push({k: 'b-amber', text: `${r.name} is waiting to be confirmed`, sub: `${r.guests} guests, ${fmtTime(r.time)}`, go: () => { setView('reservations'); resFilter = 'today'; renderRes(); }}));
+  ORDERS.filter(o => !o.paid && o.stage !== 'new').forEach(o =>
+    list.push({k: 'b-brass', text: `${o.guest}'s bill hasn't been sent`, sub: `${o.id} · ${inr(orderTotal(o))}`, go: () => setView('orders')}));
+  CONVOS.filter(c => c.status === 'needs').forEach(c =>
+    list.push({k: 'b-rose', text: `${c.guest} needs a reply from staff`, sub: 'Alfred passed this one along', go: () => setView('conversations')}));
+  return list;
+}
+function renderBell() {
+  const q = billQueue();
+  const dot = $('#bellDot');
+  if (q.length) { dot.hidden = false; dot.textContent = q.length; } else dot.hidden = true;
+  $('#bellList').innerHTML = q.length ? q.map((n, i) => `
+    <li><button class="bell-item" data-bellgo="${i}"><i class="${n.k}"></i><div>${esc(n.text)}<span>${esc(n.sub)}</span></div></button></li>`).join('')
+    : '<li class="bell-empty">Nothing needs your attention right now.</li>';
+  window.__bellQueue = q;
+}
+
+function upcomingToday() {
+  return RES.filter(r => r.date === D0 && (r.status === 'confirmed' || r.status === 'pending') && toMin(r.time) >= nowMin() - 20)
+            .sort((a, b) => toMin(a.time) - toMin(b.time));
+}
+
+function tableState(t) {
+  const rs = RES.filter(r => r.date === D0 && r.table === t.id && active(r));
+  const seated = rs.find(r => r.status === 'seated');
+  const next = rs.filter(r => r.status !== 'seated' && toMin(r.time) >= nowMin() - 20).sort((a, b) => toMin(a.time) - toMin(b.time))[0] || null;
+  if (seated) return {state: 'seated', res: seated, next};
+  if (next && toMin(next.time) - nowMin() <= 90) return {state: 'soon', res: next, next};
+  return {state: 'free', res: null, next};
+}
+
+function renderFloor(pulse) {
+  const f = $('#floor');
+  $$('.tbl', f).forEach(n => n.remove());
+  TABLES.forEach(t => {
+    const st = tableState(t);
+    const b = document.createElement('button');
+    b.className = `tbl ${t.shape} ${st.state}${selectedTable === t.id ? ' selected' : ''}${pulse === t.id ? ' pulse' : ''}`;
+    b.style.left = t.x + '%'; b.style.top = t.y + '%';
+    const meta = st.state === 'seated' ? `${st.res.guests} seated` : st.state === 'soon' ? shortTime(st.res.time) : 'Free';
+    b.innerHTML = `<span class="tbl-id">${t.id}</span><span class="tbl-meta">${meta}</span>`;
+    b.setAttribute('aria-label', `${t.id}, ${t.seats} seats, ${st.state === 'seated' ? 'seated' : st.state === 'soon' ? 'guests arriving at ' + fmtTime(st.res.time) : 'free'}`);
+    b.addEventListener('click', () => { selectedTable = t.id; renderFloor(); renderFloorDetail(); });
+    f.appendChild(b);
+  });
+}
+
+function tableOrders(tableId) { return ORDERS.filter(o => tableOf(o) === tableId); }
+function tableUnpaid(tableId) { return tableOrders(tableId).reduce((s, o) => s + orderUnpaid(o), 0); }
+
+function renderFloorDetail() {
+  const el = $('#floorDetail');
+  if (!selectedTable) { el.innerHTML = '<span>Select a table to see who is there, what they ordered, and what is still to come.</span>'; return; }
+  const t = TABLES.find(x => x.id === selectedTable), st = tableState(t);
+  let head, act;
+  if (st.state === 'seated') {
+    head = `<strong>${t.id}</strong>, ${t.seats} seats. ${esc(st.res.name)}, party of ${st.res.guests}, seated since ${fmtTime(st.res.time)}.` +
+      (st.next ? ` Next up: ${esc(st.next.name)} at ${fmtTime(st.next.time)}.` : '');
+    act = `<button class="btn" data-clear="${st.res.id}">Clear table</button>`;
+  } else if (st.state === 'soon') {
+    head = `<strong>${t.id}</strong>, ${t.seats} seats. ${esc(st.res.name)} arrives at ${fmtTime(st.res.time)}, party of ${st.res.guests}.` +
+      (st.res.note ? ` ${esc(st.res.note)}` : '');
+    act = `<button class="btn primary" data-seat="${st.res.id}">Seat ${esc(st.res.name.split(' ')[0])}</button>`;
+  } else {
+    head = `<strong>${t.id}</strong>, ${t.seats} seats. Free` + (st.next ? ` until ${esc(st.next.name)} at ${fmtTime(st.next.time)}.` : ' for the rest of the day.');
+    act = `<button class="btn" data-walkinopen="${t.id}">Seat a walk-in</button>`;
+  }
+  el.innerHTML = `<span>${head}</span>${act}`;
+
+  const ordersBox = $('#floorOrders');
+  if (st.state !== 'seated') { ordersBox.innerHTML = ''; return; }
+  const orders = tableOrders(t.id);
+  const unpaid = tableUnpaid(t.id);
+  let html = '<div class="panel-head" style="margin:18px 0 10px"><h2>Orders for this table</h2></div>';
+  if (!orders.length) {
+    html += '<p class="empty">No orders placed for this table yet.</p>';
+  } else {
+    html += orders.map(o => orderBlock(o)).join('');
+  }
+  if (unpaid > 0) html += `<div class="bill-row"><button class="btn primary" data-billtable="${t.id}">Send bill · ${inr(unpaid)}</button></div>`;
+  ordersBox.innerHTML = html;
+}
+
+const editingOrders = new Set();
+
+function orderBlock(o) {
+  const canEdit = o.stage !== 'done';
+  const editing = editingOrders.has(o.id);
+  return `<div style="margin-bottom:14px">
+    <div class="t-top"><span>${o.id}</span><span style="display:flex;align-items:center;gap:8px"><span class="dim">${o.paid ? 'Paid' : 'Unpaid'}</span>${canEdit ? `<button type="button" class="edit-toggle${editing ? ' on' : ''}" data-editorder="${o.id}">${editing ? 'Done' : 'Edit'}</button>` : ''}</span></div>
+    ${renderChecklist(o, editing)}
+    ${o.stage === 'new' ? `<div class="bill-row">${startOrPayButton(o)}</div>` : ''}
+  </div>`;
+}
+
+function renderChecklist(o, editing) {
+  const showCheckbox = o.stage !== 'new';
+  const checkEditable = o.stage === 'brewing' || o.stage === 'ready';
+  const rows = o.items.map((x, i) => {
+    const item = byId[x.id];
+    const box = showCheckbox
+      ? `<input type="checkbox" ${x.served ? 'checked' : ''} ${checkEditable ? '' : 'disabled'} data-toggleitem="${o.id}:${i}" aria-label="${item.name} served">`
+      : '<span class="check-spacer"></span>';
+    const right = editing
+      ? `<span class="qty-stepper"><button type="button" class="qty-btn" data-qty="${o.id}:${i}:-1" ${x.qty <= 1 ? 'disabled' : ''} aria-label="Decrease ${item.name}">&minus;</button><span class="num">${x.qty}</span><button type="button" class="qty-btn" data-qty="${o.id}:${i}:1" aria-label="Increase ${item.name}">+</button></span>
+         <span class="ci-price">${inr(item.price * x.qty)}</span>
+         <button type="button" class="ci-remove" data-removeitem="${o.id}:${i}" aria-label="Remove ${item.name}">&times;</button>`
+      : `<span class="ci-price">${x.qty} × ${inr(item.price)}</span>`;
+    return `<li class="check-item${x.served ? ' done' : ''}">${box}<span class="ci-main"><span class="ci-name">${x.qty} × ${item.name}</span><span class="ci-right">${right}</span></span></li>`;
+  }).join('');
+  return `<ul class="check-items">${rows}</ul>${o.stage === 'new' ? '<p class="check-note">Not started yet.</p>' : ''}`;
+}
+
+function startOrPayButton(o) {
+  if (tableOf(o)) return `<button class="btn primary" data-start="${o.id}">Start</button>`;
+  return o.paid ? `<button class="btn primary" data-start="${o.id}">Start</button>` : `<button class="btn primary" data-pay="${o.id}">Mark paid</button>`;
+}
+
+function toggleItemServed(orderId, idx) {
+  const o = ORDERS.find(x => x.id === orderId);
+  if (!o || (o.stage !== 'brewing' && o.stage !== 'ready')) return;
+  o.items[idx].served = !o.items[idx].served;
+  const allServed = o.items.every(x => x.served);
+  if (allServed && o.stage === 'brewing') {
+    o.stage = 'ready';
+    addFeed(`${o.id} for ${o.guest} is ready`, 'order');
+    if (o.src) toast(`${o.guest} was told on WhatsApp that ${o.id} is ready`);
+  } else if (!allServed && o.stage === 'ready') {
+    o.stage = 'brewing';
+    addFeed(`${o.id} for ${o.guest} sent back to the bar`, 'order');
+  }
+  renderAll({fresh: o.id});
+}
+
+function adjustItemQty(orderId, idx, delta) {
+  const o = ORDERS.find(x => x.id === orderId);
+  if (!o) return;
+  o.items[idx].qty = Math.max(1, o.items[idx].qty + delta);
+  renderAll({fresh: o.id});
+}
+
+function removeOrderItem(orderId, idx) {
+  const o = ORDERS.find(x => x.id === orderId);
+  if (!o) return;
+  const name = byId[o.items[idx].id].name;
+  o.items.splice(idx, 1);
+  if (!o.items.length) {
+    editingOrders.delete(o.id);
+    const i = ORDERS.indexOf(o);
+    if (i > -1) ORDERS.splice(i, 1);
+    addFeed(`${o.id} for ${o.guest} was voided, no items left`, 'cancel');
+    toast(`${o.id} removed`);
+  } else {
+    toast(`Removed ${name} from ${o.id}`);
+  }
+  renderAll();
+}
+
+function renderUpNext() {
+  const list = upcomingToday().slice(0, 5);
+  $('#upnext').innerHTML = list.length ? list.map(r => `
+    <li><span class="tl-time">${fmtTime(r.time)}</span><div>
+      <div class="tl-name">${esc(r.name)}</div>
+      <div class="tl-meta">${r.guests} guests at ${r.table}, booked via ${r.src}${r.status === 'pending' ? ', not yet confirmed' : ''}</div>
+      ${r.note ? `<div class="tl-note">${esc(r.note)}</div>` : ''}</div></li>`).join('')
+    : '<li class="empty">No more bookings today. New ones from Alfred will show up here.</li>';
+}
+
+function renderFeed() {
+  const el = $('#feed');
+  el.innerHTML = FEED.slice(0, 16).map(f =>
+    `<li class="${f.fresh ? 'fresh' : ''}"><time>${fmtTime(f.t)}</time><span><i class="k k-${f.k}"></i>${esc(f.text)}</span></li>`).join('');
+  el.scrollTop = 0;
+  FEED.forEach(f => { f.fresh = false; });
+}
+function addFeed(text, k) { FEED.unshift({t: hhmm(nowMin()), text, k, fresh: true}); }
+
+function renderWeek() {
+  const vals = [...WEEK_PAST, revenueToday()];
+  const labels = [...Array(7)].map((_, i) => addDays(i - 6).toLocaleDateString('en-IN', {weekday: 'short'}));
+  const box = $('#week');
+  const W = Math.round(Math.min(900, Math.max(320, box.clientWidth || 900))), H = 210, top = 34, base = H - 32, max = 30000;
+  const gap = (W - 40) / 7, bw = Math.min(58, gap * 0.62);
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Takings for the last seven days, click a bar for that day's detail">`;
+  [10000, 20000, 30000].forEach(g => {
+    const y = base - g / max * (base - top);
+    s += `<line class="grid" x1="40" x2="${W}" y1="${y}" y2="${y}"/><text class="gl" x="0" y="${y + 4}">${g / 1000}k</text>`;
+  });
+  vals.forEach((v, i) => {
+    const h = Math.max(4, v / max * (base - top)), x = 40 + gap * i + (gap - bw) / 2, y = base - h, on = i === 6;
+    s += `<rect class="bar-rect bar-clickable${on ? ' on' : ''}" data-day="${i}" x="${x}" y="${y}" width="${bw}" height="${h}" rx="6"><title>${on ? 'Today so far' : labels[i]}: ${inr(v)}, click for detail</title></rect>`;
+    s += `<text class="ax${on ? ' on' : ''}" x="${x + bw / 2}" y="${H - 8}" text-anchor="middle">${on ? 'Today' : labels[i]}</text>`;
+    s += `<text class="val" x="${x + bw / 2}" y="${y - 9}" text-anchor="middle" ${on ? '' : 'opacity=".55"'}>${(v / 1000).toFixed(1)}k</text>`;
+  });
+  box.innerHTML = s + '</svg>';
+  $('#weekTotal').textContent = `${inr(vals.reduce((a, b) => a + b, 0))} across 7 days`;
+}
+
+const STATUS_LABEL = {seated: 'Seated', confirmed: 'Confirmed', pending: 'Pending', cancelled: 'Cancelled', completed: 'Left'};
+function renderRes(fresh) {
+  $$('#resFilter button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.f === resFilter)));
+  let list = RES.slice();
+  if (resFilter === 'today') list = list.filter(r => r.date === D0 && r.status !== 'cancelled');
+  else if (resFilter === 'tomorrow') list = list.filter(r => r.date === D1 && r.status !== 'cancelled');
+  else if (resFilter === 'upcoming') list = list.filter(r => r.date >= D0 && (r.status === 'confirmed' || r.status === 'pending'));
+  else list = list.filter(r => r.status === 'cancelled');
+  list.sort((a, b) => a.date.localeCompare(b.date) || toMin(a.time) - toMin(b.time));
+  const rows = list.map(r => {
+    let act = '';
+    if (r.status === 'pending') act = `<button class="btn primary" data-confirm="${r.id}">Confirm</button><button class="btn quiet" data-cancel="${r.id}">Cancel</button>`;
+    else if (r.status === 'confirmed' && r.date === D0) act = `<button class="btn" data-seat="${r.id}">Seat</button><button class="btn quiet" data-cancel="${r.id}">Cancel</button>`;
+    else if (r.status === 'confirmed') act = `<button class="btn quiet" data-cancel="${r.id}">Cancel</button>`;
+    else if (r.status === 'seated') act = `<button class="btn" data-clear="${r.id}">Clear table</button>`;
+    const when = resFilter === 'today' ? fmtTime(r.time) : `${fmtDate(r.date)}, ${fmtTime(r.time)}`;
+    return `<tr class="${r.id === fresh ? 'fresh' : ''}"><td class="when">${when}</td>
+      <td>${esc(r.name)}<span class="sub-phone">${phoneFor(r.name)}</span>${r.note ? `<span class="sub">${esc(r.note)}</span>` : ''}</td>
+      <td class="num">${r.guests}</td><td>${r.table}</td><td class="muted">${r.src}</td>
+      <td><span class="pill p-${r.status}">${STATUS_LABEL[r.status]}</span></td>
+      <td><div class="actions">${act}</div></td></tr>`;
+  }).join('');
+  $('#resTable').innerHTML = `<thead><tr><th>When</th><th>Guest</th><th>Party</th><th>Table</th><th>Came in via</th><th>Status</th><th><span class="sr">Actions</span></th></tr></thead>
+    <tbody>${rows || '<tr><td colspan="7" class="empty">Nothing here right now.</td></tr>'}</tbody>`;
+}
+
+const STAGES = [['new', 'New'], ['brewing', 'On the bar'], ['ready', 'Ready'], ['done', 'Done']];
+function ticket(o, fresh) {
+  const nextLabel = {ready: tableOf(o) ? 'Mark served' : o.type === 'Delivery' ? 'Hand to rider' : 'Mark picked up'}[o.stage];
+  let btn = '';
+  if (o.stage === 'new') btn = startOrPayButton(o);
+  else if (o.stage === 'ready') btn = `<button class="btn primary" data-advance="${o.id}">${nextLabel}</button>`;
+  const billBtn = (!o.paid && o.stage !== 'new') ? `<button class="btn" data-billorder="${o.id}">Send bill</button>` : '';
+  const canEdit = o.stage !== 'done';
+  const editing = editingOrders.has(o.id);
+  const editBtn = canEdit ? `<button type="button" class="edit-toggle${editing ? ' on' : ''}" data-editorder="${o.id}">${editing ? 'Done' : 'Edit'}</button>` : '';
+  return `<article class="ticket${o.id === fresh ? ' fresh' : ''}">
+    <div class="t-top"><span class="num">${o.id}</span><span style="display:flex;align-items:center;gap:8px"><span class="num">${fmtTime(o.placed)}</span>${editBtn}</span></div>
+    <div class="t-guest">${esc(o.guest)}<span class="sub-phone">${phoneFor(o.guest)}</span></div>
+    <div class="t-type">${o.type}${o.src ? ` via ${o.src}` : ''}${o.paid ? '' : '<span class="pill p-pending">Unpaid</span>'}</div>
+    ${renderChecklist(o, editing)}
+    <div class="t-foot"><span class="t-total">${inr(orderTotal(o))}</span><div class="actions">${billBtn}${btn}</div></div></article>`;
+}
+function renderBoard(fresh) {
+  $('#board').innerHTML = STAGES.map(([k, label]) => {
+    let list = ORDERS.filter(o => o.stage === k).sort((a, b) => toMin(b.placed) - toMin(a.placed));
+    const count = list.length;
+    if (k === 'done') list = list.slice(0, 4);
+    return `<section class="col" aria-label="${label}"><div class="col-head"><h2>${label}</h2><span class="dim num">${count}</span></div>
+      ${list.map(o => ticket(o, fresh)).join('') || '<p class="empty">Nothing here.</p>'}</section>`;
+  }).join('');
+}
+
+const tier = g => g.visits >= 20 ? 'Regular' : g.visits >= 8 ? 'Returning' : 'New';
+const lastTxt = n => n === 0 ? 'Today' : n === 1 ? 'Yesterday' : `${n} days ago`;
+function guestUnpaid(name) { return ORDERS.filter(o => o.guest === name && !o.paid).reduce((s, o) => s + orderTotal(o), 0); }
+function renderGuests() {
+  const q = guestQuery.trim().toLowerCase();
+  const list = GUESTS.filter(g => !q || g.name.toLowerCase().includes(q) || g.usual.toLowerCase().includes(q)).sort((a, b) => b.visits - a.visits);
+  $('#guestTable').innerHTML = `<thead><tr><th>Guest</th><th>Visits</th><th>Last visit</th><th>Usual order</th><th>Spent</th><th>Bill</th></tr></thead><tbody>` +
+    (list.map(g => {
+      const owed = guestUnpaid(g.name);
+      return `<tr><td>${esc(g.name)}<span class="sub-phone">${phoneFor(g.name)}</span><span class="sub">${tier(g)}</span></td><td class="num">${g.visits}</td><td>${lastTxt(g.last)}</td><td class="muted">${esc(g.usual)}</td><td class="num">${inr(g.spend)}</td>
+        <td>${owed > 0 ? `<button class="btn" data-billguest="${esc(g.name)}">Send ${inr(owed)}</button>` : '<span class="dim">—</span>'}</td></tr>`;
+    }).join('')
+      || `<tr><td colspan="6" class="empty">No guests match "${esc(guestQuery)}". Try a first name or a drink.</td></tr>`) + '</tbody>';
+  const quiet = GUESTS.filter(g => g.last >= 21 && g.visits >= 5).sort((a, b) => b.visits - a.visits);
+  $('#quiet').innerHTML = quiet.map(g => `<li><span>${esc(g.name)}<span class="sub">${g.visits} visits, last seen ${g.last} days ago</span></span>
+    ${g.offered ? '<button class="btn" disabled>Offer sent</button>' : `<button class="btn" data-offer="${esc(g.name)}">Send ₹50 off</button>`}</li>`).join('')
+    || '<li class="empty">Everyone has been in recently.</li>';
+}
+
+function renderConvos() {
+  $$('#convoFilter button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.cf === convoFilter)));
+  const list = convoFilter === 'needs' ? CONVOS.filter(c => c.status === 'needs') : CONVOS;
+  $('#convoList').innerHTML = list.length ? list.map(c => `
+    <li class="convo${c.open ? ' open' : ''}" data-cid="${c.id}">
+      <button class="convo-row" data-convo="${c.id}">
+        <span class="convo-av">${esc(c.guest.split(' ').map(w => w[0]).join('').slice(0, 2))}</span>
+        <span class="convo-name-wrap"><span class="tl-name">${esc(c.guest)}</span><span class="convo-snip">${esc(c.messages[c.messages.length - 1].text.split('\n')[0])}</span></span>
+        <span class="pill p-${c.status === 'needs' ? 'pending' : 'completed'}">${c.status === 'needs' ? 'Needs a reply' : 'Handled'}</span>
+        <span class="convo-time">${/^\d{2}:\d{2}$/.test(c.t) ? fmtTime(c.t) : c.t}</span>
+      </button>
+      <div class="convo-thread">${c.messages.map(m => `<div class="msg ${m.who}">${esc(m.text).replace(/\n/g, '<br>')}</div>`).join('')}
+        <p class="dim small" style="margin-top:10px">${esc(c.guest)} · ${phoneFor(c.guest)}</p></div>
+    </li>`).join('') : '<li class="empty" style="padding:24px">Nothing here.</li>';
+}
+function toggleConvo(id) { const c = CONVOS.find(x => x.id === id); c.open = !c.open; renderConvos(); }
+function pushConvo(guest, userText, botText) {
+  CONVOS.unshift({id: 'C-' + nextConvo++, guest, status: 'needs', t: hhmm(nowMin()), messages: [{who: 'me', text: userText}, {who: 'bot', text: botText}]});
+  markNew('conversations'); renderNavCounts(); renderBell();
+}
+
+function showDayDetail(i) {
+  dayIndex = i;
+  const live = i === 6;
+  const d = live ? liveDayDetail() : DAY_DETAILS[i];
+  const label = live ? 'Today' : addDays(i - 6).toLocaleDateString('en-IN', {weekday: 'long', day: 'numeric', month: 'long'});
+  $('#dayTitle').textContent = label;
+  $('#daySub').textContent = live ? 'So far today.' : 'Full breakdown for that day.';
+  $('#dayTotal').textContent = inr(d.total);
+  $('#dayOrders').textContent = d.orders;
+  $('#dayAvg').textContent = inr(d.avg);
+  const maxH = Math.max(...d.hours, 1);
+  $('#dayHours').innerHTML = d.hours.map((v, idx) => `<div class="hb" style="height:${Math.max(4, v / maxH * 90)}px"><span>${HOUR_LABELS[idx]}</span></div>`).join('');
+  $('#dayTopItems').innerHTML = d.top.map(([name, qty, rev]) => `<li><span>${esc(name)}<span class="sub">${qty} sold</span></span><span class="num">${inr(rev)}</span></li>`).join('');
+  const sample = d.sample || [];
+  $('#dayOrdersNote').textContent = live ? `${sample.length} orders so far` : `A sample of ${sample.length} orders from ${d.orders} that day`;
+  $('#dayOrdersTable').innerHTML = `<thead><tr><th>Time</th><th>Guest</th><th>Items</th><th>Total</th></tr></thead><tbody>${
+    sample.map(([guest, time, items, total]) => `<tr><td class="when">${esc(time)}</td><td>${esc(guest)}</td>
+      <td class="muted">${items.map(([id, qty]) => `${qty} × ${byId[id].name}`).join(', ')}</td><td class="num">${inr(total)}</td></tr>`).join('')
+    || '<tr><td colspan="4" class="empty">No orders yet.</td></tr>'}</tbody>`;
+  setView('daydetail');
+}
+function liveDayDetail() {
+  const paid = ORDERS.filter(o => o.paid).sort((a, b) => toMin(a.placed) - toMin(b.placed));
+  const total = revenueToday();
+  const byItem = {};
+  paid.forEach(o => o.items.forEach(x => { byItem[x.id] = (byItem[x.id] || 0) + x.qty; }));
+  const top = Object.entries(byItem).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([id, qty]) => [byId[id].name, qty, qty * byId[id].price]);
+  const hours = [16, 21, 30, Math.round((total - BASE_REV) / 480) + 20, 0, 0, 0];
+  const sample = paid.map(o => [o.guest, fmtTime(o.placed), o.items.map(x => [x.id, x.qty]), orderTotal(o)]);
+  return {total, orders: paid.length + 30, avg: Math.round(total / (paid.length + 30)), top: top.length ? top : [['Filter Kaapi', 12, 1080]], hours, sample};
+}
+
+function renderAll(opts = {}) {
+  renderClock(); renderStats(); renderNavCounts(); renderBell(); renderRatings();
+  renderFloor(opts.pulse); renderFloorDetail(); renderUpNext(); renderFeed();
+  renderWeek(); renderRes(opts.fresh); renderBoard(opts.fresh); renderGuests(); renderConvos();
+}
+
+/* ---------- Navigation ---------- */
+function setView(v) {
+  view = v;
+  $$('.view').forEach(s => { s.hidden = s.id !== 'view-' + v; });
+  $$('.nav-btn').forEach(b => {
+    const on = b.dataset.view === v;
+    if (on) { b.setAttribute('aria-current', 'page'); b.classList.remove('has-new'); } else b.removeAttribute('aria-current');
+  });
+  $('#main').scrollTop = 0; window.scrollTo(0, 0);
+  if (v !== 'daydetail') dayIndex = null;
+}
+function markNew(v) { if (view !== v) { const b = $(`.nav-btn[data-view="${v}"]`); if (b) b.classList.add('has-new'); } }
+$$('.nav-btn[data-view]').forEach(b => b.addEventListener('click', () => setView(b.dataset.view)));
+$('#dayBack').addEventListener('click', () => setView('today'));
+
+let toastTimer;
+function toast(msg) {
+  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 3400);
+}
+
+/* ---------- Bell dropdown ---------- */
+$('#bellBtn').addEventListener('click', e => {
+  e.stopPropagation();
+  const open = !$('#bellPanel').classList.contains('open');
+  $('#bellPanel').classList.toggle('open', open);
+  $('#bellBtn').setAttribute('aria-expanded', String(open));
+});
+document.addEventListener('click', e => { if (!e.target.closest('.tools')) { $('#bellPanel').classList.remove('open'); $('#bellBtn').setAttribute('aria-expanded', 'false'); } });
+
+/* ---------- Generic modal open/close ---------- */
+function openModal(name) { $('#' + name + 'Scrim').classList.add('open'); }
+function closeModal(name) { $('#' + name + 'Scrim').classList.remove('open'); }
+$$('.modal-scrim').forEach(s => s.addEventListener('click', e => { if (e.target === s) s.classList.remove('open'); }));
+$$('[data-close]').forEach(b => b.addEventListener('click', () => closeModal(b.dataset.close)));
+
+/* ---------- Walk-in modal ---------- */
+function openWalkin(tableId) {
+  walkinTableId = tableId;
+  const t = TABLES.find(x => x.id === tableId);
+  $('#walkinTableNote').textContent = `Seating a walk-in at ${tableId} (${t.seats} seats).`;
+  $('#walkinName').value = ''; $('#walkinPhone').value = '';
+  openModal('walkin'); setTimeout(() => $('#walkinName').focus(), 60);
+}
+$('#walkinForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const t = TABLES.find(x => x.id === walkinTableId);
+  const name = $('#walkinName').value.trim() || 'Walk-in';
+  RES.push({id: 'R-' + nextRes++, name, guests: Math.min(2, t.seats), date: D0, time: hhmm(nowMin()), table: t.id, status: 'seated', src: 'Walk-in'});
+  addFeed(`${name} seated at ${t.id}`, 'seat');
+  closeModal('walkin'); selectedTable = t.id; renderAll(); toast(`${name} seated at ${t.id}`);
+});
+
+/* ---------- Manual new booking modal ---------- */
+function bkDateVal() { return {D0, D1, D2}[$('#bkDate').value]; }
+function refreshBookingTable() {
+  const guests = Math.max(1, parseInt($('#bkGuests').value, 10) || 1);
+  const time = parseTime($('#bkTime').value.toLowerCase());
+  const date = bkDateVal();
+  const suggestion = time ? freeTable(date, time, guests) : null;
+  $('#bkTable').innerHTML = TABLES.map(t => {
+    const busy = time && !!RES.some(r => r.date === date && r.table === t.id && active(r) && Math.abs(toMin(r.time) - toMin(time)) < 90);
+    return `<option value="${t.id}" ${t === suggestion ? 'selected' : ''}>${t.id} · ${t.seats} seats${busy ? ' — busy near that time' : ''}</option>`;
+  }).join('');
+  $('#bkHint').textContent = !time ? 'Enter a time to see which tables are free.'
+    : suggestion ? `${suggestion.id} is free at ${fmtTime(time)}.` : `Nothing is free at ${fmtTime(time)} for ${guests} — pick a table anyway, or try another time.`;
+  $('#bkHint').classList.toggle('warn', !!time && !suggestion);
+}
+['bkGuests', 'bkTime', 'bkDate'].forEach(id => $('#' + id).addEventListener('input', refreshBookingTable));
+$('#newBookingBtn').addEventListener('click', () => {
+  $('#bkName').value = ''; $('#bkPhone').value = ''; $('#bkTime').value = ''; $('#bkGuests').value = 2; $('#bkDate').value = 'D0'; $('#bkSource').value = 'Phone';
+  refreshBookingTable(); openModal('booking'); setTimeout(() => $('#bkName').focus(), 60);
+});
+$('#bookingForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const time = parseTime($('#bkTime').value.toLowerCase());
+  if (!time) { $('#bkHint').textContent = "That doesn't look like a time — try something like 7:30 pm."; $('#bkHint').classList.add('warn'); return; }
+  const r = {id: 'R-' + nextRes++, name: $('#bkName').value.trim() || 'Guest', guests: Math.max(1, parseInt($('#bkGuests').value, 10) || 1),
+    date: bkDateVal(), time, table: $('#bkTable').value, status: 'confirmed', src: $('#bkSource').value};
+  RES.push(r);
+  addFeed(`${r.name} booked by phone for ${r.guests}, ${dateWords(r.date)} at ${fmtTime(r.time)}`, 'book');
+  closeModal('booking'); setView('reservations'); resFilter = r.date === D0 ? 'today' : r.date === D1 ? 'tomorrow' : 'upcoming';
+  renderAll({fresh: r.id}); toast(`Booked ${r.name} for ${fmtTime(r.time)}`);
+});
+
+/* ---------- Send / split bill modal ---------- */
+function openBillModal(orderIds, phone, label, ways) {
+  const orders = ORDERS.filter(o => orderIds.includes(o.id) && !o.paid);
+  const total = orders.reduce((s, o) => s + orderTotal(o), 0);
+  pendingBill = {orderIds: orders.map(o => o.id), phone, label, total, shares: null};
+  $('#splitTotalLine').textContent = `${inr(total)} owed by ${label} · will be sent to ${phone}`;
+  $('#splitWays').value = ways || 1;
+  renderSplitRows();
+  openModal('split');
+}
+function renderSplitRows() {
+  const ways = Math.max(1, parseInt($('#splitWays').value, 10) || 1);
+  if (!pendingBill.shares || pendingBill.shares.length !== ways) {
+    const equal = pendingBill.total / ways;
+    pendingBill.shares = Array.from({length: ways}, () => Math.round(equal));
+  }
+  $('#splitRows').innerHTML = pendingBill.shares.map((amt, i) =>
+    `<div class="split-row"><span>Guest ${i + 1}</span><span class="split-amt">₹<input type="number" min="0" step="1" class="split-input" data-share="${i}" value="${amt}"></span></div>`).join('');
+  updateSplitSum();
+}
+function updateSplitSum() {
+  const sum = pendingBill.shares.reduce((a, b) => a + (Number(b) || 0), 0);
+  const note = $('#splitSumNote');
+  note.textContent = sum === pendingBill.total ? `Adds up to ${inr(sum)} — matches the bill.` : `Adds up to ${inr(sum)} (bill is ${inr(pendingBill.total)}). Edit an amount above to adjust.`;
+  note.classList.toggle('warn', sum !== pendingBill.total);
+}
+$('#splitWays').addEventListener('input', renderSplitRows);
+$('#splitRows').addEventListener('input', e => {
+  const inp = e.target.closest('[data-share]'); if (!inp) return;
+  pendingBill.shares[+inp.dataset.share] = Number(inp.value) || 0;
+  updateSplitSum();
+});
+$('#splitSend').addEventListener('click', () => {
+  const {orderIds, phone, label, total, shares} = pendingBill;
+  closeModal('split');
+  const detail = shares.length > 1 ? shares.map((s, i) => `Guest ${i + 1}: ${inr(s)}`).join(', ') : inr(shares[0]);
+  toast(shares.length > 1 ? `Split bill sent to ${phone} · ${detail}` : `Bill of ${inr(shares[0])} sent to ${phone}`);
+  addFeed(`Sent ${shares.length > 1 ? 'a split ' : 'a '}bill to ${label} for ${inr(total)}`, 'pay');
+  setTimeout(() => {
+    orderIds.forEach(id => { const o = ORDERS.find(x => x.id === id); if (o) o.paid = true; });
+    const g = GUESTS.find(x => x.name === label); if (g) { g.spend += total; g.last = 0; }
+    addFeed(`${label} paid ${inr(total)}`, 'pay');
+    toast(`Payment received from ${label}`);
+    renderAll();
+  }, 2600);
+});
+
+/* ---------- Dashboard actions (delegated) ---------- */
+const findRes = id => RES.find(r => r.id === id);
+const findOrder = id => ORDERS.find(o => o.id === id);
+document.addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  const d = b.dataset;
+  if (d.go) { setView(d.go); return; }
+  if (d.f) { resFilter = d.f; renderRes(); return; }
+  if (d.cf) { convoFilter = d.cf; renderConvos(); return; }
+  if (d.convo) { toggleConvo(d.convo); return; }
+  if (d.bellgo) { const n = window.__bellQueue[+d.bellgo]; $('#bellPanel').classList.remove('open'); if (n) n.go(); return; }
+  if (d.walkinopen) { openWalkin(d.walkinopen); return; }
+  if (d.start) { const o = findOrder(d.start); o.stage = 'brewing'; addFeed(`${o.id} for ${o.guest} started on the bar`, 'order'); renderAll({fresh: o.id}); return; }
+  if (d.editorder) { editingOrders.has(d.editorder) ? editingOrders.delete(d.editorder) : editingOrders.add(d.editorder); renderAll({fresh: d.editorder}); return; }
+  if (d.qty) { const [oid, idx, delta] = d.qty.split(':'); adjustItemQty(oid, +idx, +delta); return; }
+  if (d.removeitem) { const [oid, idx] = d.removeitem.split(':'); removeOrderItem(oid, +idx); return; }
+  if (d.billorder) { const o = findOrder(d.billorder); openBillModal([o.id], phoneFor(o.guest), o.guest, tableOf(o) ? 1 : 1); return; }
+  if (d.billtable) { const t = d.billtable; const st = tableState(TABLES.find(x => x.id === t)); const ids = tableOrders(t).filter(o => !o.paid).map(o => o.id);
+    openBillModal(ids, phoneFor(st.res ? st.res.name : t), st.res ? st.res.name : t, st.res ? st.res.guests : 1); return; }
+  if (d.billguest) { const ids = ORDERS.filter(o => o.guest === d.billguest && !o.paid).map(o => o.id); openBillModal(ids, phoneFor(d.billguest), d.billguest, 1); return; }
+  if (d.seat) { const r = findRes(d.seat); r.status = 'seated'; r.time = r.date === D0 && toMin(r.time) > nowMin() ? hhmm(nowMin()) : r.time; selectedTable = r.table; addFeed(`${r.name}'s party of ${r.guests} seated at ${r.table}`, 'seat'); renderAll(); toast(`${r.name} seated at ${r.table}`); }
+  else if (d.clear) { const r = findRes(d.clear); r.status = 'completed'; addFeed(`${r.table} cleared after ${r.name}`, 'seat'); renderAll(); toast(`${r.table} is free`); }
+  else if (d.confirm) { const r = findRes(d.confirm); r.status = 'confirmed'; addFeed(`${r.name}'s booking confirmed`, 'book'); renderAll(); toast(`Confirmed ${r.name}. They'll get a WhatsApp message.`); }
+  else if (d.cancel) { const r = findRes(d.cancel); r.status = 'cancelled'; addFeed(`${r.name}'s booking for ${fmtDate(r.date).toLowerCase()} cancelled`, 'cancel'); renderAll(); toast(`Cancelled ${r.name}'s booking`); }
+  else if (d.pay) { const o = findOrder(d.pay); o.paid = true; o.stage = 'brewing'; addFeed(`${o.guest} paid ${inr(orderTotal(o))} for ${o.id}, now on the bar`, 'pay'); renderAll({fresh: o.id}); toast(`${o.id} marked paid`); }
+  else if (d.advance) {
+    const o = findOrder(d.advance); o.stage = 'done';
+    const words = tableOf(o) ? 'was served' : o.type === 'Delivery' ? 'went out with the rider' : 'was picked up';
+    addFeed(`${o.id} for ${o.guest} ${words}`, 'order'); renderAll({fresh: o.id});
+  }
+  else if (d.offer) { const g = GUESTS.find(x => x.name === d.offer); g.offered = true; addFeed(`Sent ${g.name} ₹50 off on WhatsApp`, 'book'); renderAll(); toast(`Offer sent to ${g.name}`); }
+});
+document.addEventListener('change', e => { if (e.target.matches('[data-toggleitem]')) { const [oid, idx] = e.target.dataset.toggleitem.split(':'); toggleItemServed(oid, +idx); } });
+$('#week').addEventListener('click', e => { const r = e.target.closest('[data-day]'); if (r) showDayDetail(+r.dataset.day); });
+$('#guestSearch').addEventListener('input', e => { guestQuery = e.target.value; renderGuests(); });
+
+/* ---------- Alfred (runs entirely in the browser) ---------- */
+const PERSONAS = [
+  {name: 'Meera Iyer', label: 'Meera Iyer, a regular'},
+  {name: 'Imran Patel', label: 'Imran Patel, a regular'},
+  {name: 'Sahil Rao', label: 'Sahil Rao, first time'},
+];
+let persona = PERSONAS[0].name;
+let convo = {pending: null, offer: null, usual: null};
+let busy = false;
+
+const NUMS = {one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10,
+  ek: 1, do: 2, teen: 3, char: 4, chaar: 4, paanch: 5, panch: 5, chhe: 6};
+const QTY = {a: 1, an: 1, ...NUMS};
+const numOf = w => /^\d+$/.test(w) ? parseInt(w, 10) : NUMS[w.toLowerCase()];
+const NUMW = `(\\d{1,2}|${Object.keys(NUMS).join('|')})`;
+const reEsc = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const ALIASES = MENU.flatMap(m => m.alias.map(a => [a, m.id])).sort((a, b) => b[0].length - a[0].length);
+
+const isHinglish = s => /\b(kal|aaj|chahiye|hai|hain|karo|karna|log|logon|baje|mujhe|kya|mera|meri|haan|nahi|bhai|parso|liye|chalega|bhejo)\b/.test(s);
+
+function parseGuests(s) {
+  const pats = [
+    new RegExp(`\\b(?:for|of)\\s+${NUMW}\\b(?!\\s*(?::|\\.\\d|am|pm|baje|o'?\\s?clock))`),
+    new RegExp(`\\b${NUMW}\\s*(?:people|persons|ppl|guests|pax|log|logon|adults|of us|members)\\b`),
+    new RegExp(`\\bwe(?:'re| are)\\s+${NUMW}\\b`),
+  ];
+  for (const p of pats) { const m = s.match(p); if (m) return numOf(m[1]); }
+  if (/\b(couple|just us two|the two of us)\b/.test(s)) return 2;
+  return null;
+}
+
+function parseTime(s) {
+  let h, min = 0, ap = null, m;
+  if ((m = s.match(/\b(\d{1,2})[:.](\d{2})\s*(am|pm)?\b/))) { h = +m[1]; min = +m[2]; ap = m[3] || null; }
+  else if ((m = s.match(/\b(\d{1,2})(\d{2})\s*(am|pm)\b/))) { h = +m[1]; min = +m[2]; ap = m[3]; }
+  else if ((m = s.match(/\b(\d{1,2})\s*(am|pm|baje|o'?\s?clock)\b/))) { h = +m[1]; ap = /am|pm/.test(m[2]) ? m[2] : null; }
+  else if ((m = s.match(/(?:\bat|@)\s*(\d{1,2})\b(?!\s*(?:people|persons|guests|pax|log))/))) { h = +m[1]; }
+  else if (/\bnoon\b/.test(s)) return '12:00';
+  else return null;
+  if (h > 23 || min > 59) return null;
+  if (ap === 'pm' && h < 12) h += 12;
+  if (ap === 'am' && h === 12) h = 0;
+  if (!ap) {
+    if (/\b(tonight|evening|night|dinner|shaam|raat)\b/.test(s) && h < 12) h += 12;
+    else if (h < 8) h += 12;            // the café opens at 8, so "7" means 7 pm
+  }
+  return hhmm(h * 60 + min);
+}
+
+function parseDate(s) {
+  if (/\b(day after tomorrow|parso)\b/.test(s)) return D2;
+  if (/\b(tomorrow|tmrw|tmr|kal)\b/.test(s)) return D1;
+  if (/\b(today|tonight|aaj|now)\b/.test(s)) return D0;
+  const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+  for (let i = 0; i < 7; i++) {
+    if (new RegExp(`\\b${days[i].slice(0, 3)}(?:${days[i].slice(3)})?\\b`).test(s)) {
+      return iso(addDays((i - TODAY.getDay() + 7) % 7));
+    }
+  }
+  return null;
+}
+
+function findItems(s) {
+  let t = ` ${s} `;
+  const found = {};
+  const qtyW = Object.keys(QTY).join('|');
+  for (const [a, id] of ALIASES) {
+    const re = new RegExp(`(?:\\b(\\d{1,2}|${qtyW})\\s*(?:x\\s*)?(?:(?:cups?|plates?|slices?|pieces?|glass(?:es)?)\\s+(?:of\\s+)?)?)?\\b${reEsc(a)}(?:e?s)?\\b`);
+    let m;
+    while ((m = t.match(re))) {
+      const q = m[1] ? (QTY[m[1]] || parseInt(m[1], 10)) : 1;
+      found[id] = (found[id] || 0) + Math.min(q, 20);
+      t = t.slice(0, m.index) + ' '.repeat(m[0].length) + t.slice(m.index + m[0].length);
+    }
+  }
+  return MENU.filter(m => found[m.id]).map(m => [m.id, found[m.id]]);
+}
+
+function intentOf(s) {
+  const waiting = convo.offer || convo.usual;
+  if (waiting && /^\s*(yes|yeah|yep|yup|ok|okay|sure|please|haan|han|ha|haa|done|confirm|chalega|theek hai|go ahead)\b/.test(s)) return 'accept';
+  if (waiting && /^\s*(no|nope|nahi|nah|na)\b/.test(s)) return 'decline';
+  if (/\b(status|where'?s my|where is my|kab tak|kitna time|how long|ready yet|kaha hai|kahan hai)\b/.test(s)) return 'status';
+  if (/\b(book|booking|reserve|reservation|table|seats?)\b/.test(s)) return 'booking';
+  if (parseGuests(s) && parseTime(s)) return 'booking';
+  if (findItems(s).length) return 'order';
+  if (convo.pending && (parseTime(s) || parseGuests(s) || parseDate(s) || new RegExp(`^\\s*${NUMW}\\s*$`).test(s))) return 'booking';
+  if (/\b(menu|prices?|what do you (have|serve)|what's good|recommend|kya milta)\b/.test(s)) return 'menu';
+  if (/\b(open|close|closing|timings?|hours)\b/.test(s)) return 'hours';
+  if (/\b(thanks|thank you|thx|ty|shukriya|dhanyavad)\b/.test(s)) return 'thanks';
+  if (/^\s*(hi+|hello|hey|namaste|namaskara|good (morning|afternoon|evening))\b/.test(s)) return 'hello';
+  return 'other';
+}
+
+function freeTable(date, time, guests) {
+  const m = toMin(time);
+  return TABLES.filter(t => t.seats >= guests).sort((a, b) => a.seats - b.seats)
+    .find(t => !RES.some(r => r.date === date && r.table === t.id && active(r) && Math.abs(toMin(r.time) - m) < 90));
+}
+const slotOk = (date, time) => { const m = toMin(time); return m >= 480 && m <= 1290 && !(date === D0 && m < nowMin()); };
+
+function handleBooking(s, hi) {
+  convo.usual = null;
+  const p = convo.pending || {};
+  let g = parseGuests(s), tm = parseTime(s);
+  const d = parseDate(s);
+  const bare = s.match(new RegExp(`^\\s*${NUMW}\\s*$`));
+  if (bare && !g && !tm) { if (!p.guests) g = numOf(bare[1]); else if (!p.time) tm = parseTime('at ' + numOf(bare[1])); }
+  if (g) p.guests = g; if (tm) p.time = tm; if (d) p.date = d;
+
+  if (!p.guests || !p.time) {
+    convo.pending = p;
+    if (!p.guests && !p.time) return {reply: hi ? 'Zaroor! Kitne log honge, aur kis time pe?' : 'Happy to book you a table. How many of you, and what time?'};
+    if (!p.guests) return {reply: hi ? 'Kitne logon ke liye book karun?' : 'How many people should I book for?'};
+    return {reply: hi ? 'Kis time pe aana chahenge?' : `What time would you like the table${p.date ? ' ' + dateWords(p.date) : ''}?`};
+  }
+  if (!p.date) p.date = toMin(p.time) < nowMin() + 15 ? D1 : D0;
+
+  if (p.guests > 6) {
+    const text = s;
+    convo.pending = null;
+    return {reply: `For groups bigger than 6 we join tables, so I've passed this to the team. They'll confirm here on WhatsApp shortly.`,
+      after: () => { escalations++; addFeed(`Alfred passed a group of ${p.guests} from ${persona} to staff`, 'staff');
+        pushConvo(persona, text, `For groups bigger than 6 we join tables, so I've passed this to the team. They'll confirm here on WhatsApp shortly.`);
+        renderAll(); toast('A large group booking needs a staff reply'); }};
+  }
+  const m = toMin(p.time);
+  if (m < 480 || m > 1290) {
+    p.time = null; convo.pending = p;
+    return {reply: hi ? 'Hum 8 am se 10 pm tak open hain, last booking 9:30 pm. Kaunsa time chalega?' : "We're open 8 am to 10 pm, and the last booking is at 9:30 pm. What time works for you?"};
+  }
+  if (p.date === D0 && m < nowMin()) {
+    p.time = null; convo.pending = p;
+    return {reply: 'That time has already passed today. What later time works for you?'};
+  }
+  const t = freeTable(p.date, p.time, p.guests);
+  if (t) return confirmBooking(p, t, hi);
+  for (const delta of [30, -30, 60, 90, -60]) {
+    const alt = hhmm(m + delta);
+    if (!slotOk(p.date, alt)) continue;
+    const t2 = freeTable(p.date, alt, p.guests);
+    if (t2) {
+      convo.pending = null; convo.offer = {...p, time: alt, table: t2.id};
+      return {reply: hi ? `${fmtTime(p.time)} pe ${p.guests} logon ke liye table full hai. ${fmtTime(alt)} chalega?`
+                        : `We're full at ${fmtTime(p.time)} for ${p.guests}. I can do ${fmtTime(alt)} ${dateWords(p.date)} instead. Shall I book it?`};
+    }
+  }
+  convo.pending = null;
+  return {reply: `We're fully booked around then ${dateWords(p.date)}. Would another day work?`};
+}
+
+function confirmBooking(p, t, hi) {
+  convo.pending = null; convo.offer = null;
+  const who = persona;
+  const r = {id: 'R-' + nextRes++, name: who, guests: p.guests, date: p.date, time: p.time, table: t.id, status: 'confirmed', src: 'Alfred'};
+  const reply = hi
+    ? `Ho gaya! ${hiDate(p.date)} ${fmtTime(p.time)} pe ${p.guests} logon ke liye table ${t.id} book hai. Ek ghanta pehle reminder bhej denge.`
+    : `Done! You're booked for ${p.guests} ${dateWords(p.date)} at ${fmtTime(p.time)}, table ${t.id}. We'll send a reminder an hour before.`;
+  return {reply, after: () => {
+    RES.push(r); ensureGuest(who);
+    addFeed(`Alfred booked ${who} for ${p.guests}, ${dateWords(p.date)} at ${fmtTime(p.time)}`, 'book');
+    toast(`New booking: ${who}, ${p.guests} guests ${dateWords(p.date)} at ${fmtTime(p.time)}`);
+    if (p.date === D0) selectedTable = t.id;
+    markNew('reservations');
+    renderAll({fresh: r.id, pulse: p.date === D0 ? t.id : null});
+  }};
+}
+
+function createOrder(items, type, hi) {
+  const who = persona;
+  const o = {id: 'KN-' + nextOrder++, guest: who, items: items.map(([id, qty]) => it(id, qty, false)), type, stage: 'new', placed: hhmm(nowMin()), paid: false, src: 'Alfred'};
+  const total = orderTotal(o);
+  const lines = items.map(([id, q]) => `${q} × ${byId[id].name}`).join('<br>');
+  const eta = type === 'Delivery' ? 'about 30 minutes' : 'about 12 minutes';
+  const reply = hi
+    ? `${lines}<br><br>Total ${inr(total)}. UPI link bhej diya hai, payment hote hi banana shuru karenge.`
+    : `${lines}<br><br>That's ${inr(total)} for ${type.toLowerCase()}. I've sent you a UPI link, and we'll start as soon as it's paid.`;
+  return {reply, after: () => {
+    ORDERS.push(o); ensureGuest(who);
+    addFeed(`Alfred took order ${o.id} from ${who}, waiting on payment`, 'order');
+    toast(`New order ${o.id} from ${who}`);
+    markNew('orders'); renderAll({fresh: o.id});
+    setTimeout(() => {
+      o.paid = true; if (o.stage === 'new') o.stage = 'brewing';
+      const g = GUESTS.find(x => x.name === o.guest); if (g) { g.spend += total; g.last = 0; }
+      addFeed(`${o.guest} paid ${inr(total)} for ${o.id}, now on the bar`, 'pay');
+      markNew('orders'); renderAll({fresh: o.id});
+      if (persona === who) botSay(hi ? `Payment mil gaya, thank you! Order ${o.id} ban raha hai, ${eta.replace('about ', 'lagbhag ').replace('minutes', 'minute')} mein ready.`
+                                     : `Payment received, thank you! Order ${o.id} is on the bar now and will be ready in ${eta}.`);
+    }, 2800);
+  }};
+}
+
+function handleStatus() {
+  const mine = ORDERS.filter(o => o.guest === persona).sort((a, b) => toMin(b.placed) - toMin(a.placed));
+  const open = mine.find(o => o.stage !== 'done');
+  if (open) {
+    const msg = {
+      new: open.paid ? `Order ${open.id} is paid and next in line on the bar.` : `Order ${open.id} is waiting on payment. I've sent the UPI link again.`,
+      brewing: `Order ${open.id} is being made right now. About 8 minutes to go.`,
+      ready: open.type === 'Delivery' ? `Order ${open.id} is packed and waiting for the rider.` : `Order ${open.id} is ready at the counter. Come on in!`,
+    }[open.stage];
+    return {reply: msg};
+  }
+  if (mine[0]) return {reply: `Your last order, ${mine[0].id}, was completed earlier today. Tell me what you'd like if you want to order again.`};
+  return {reply: "I can't find an order from you today. Tell me what you'd like and I'll start one."};
+}
+
+function menuText() {
+  const cats = [...new Set(MENU.map(m => m.cat))];
+  return "Here's what we're serving today:<br><br>" +
+    cats.map(c => `<b>${c}</b><br>` + MENU.filter(m => m.cat === c).map(m => `${m.name}, ${inr(m.price)}`).join('<br>')).join('<br><br>') +
+    '<br><br>Just tell me what you’d like, for example “2 filter kaapi for pickup”.';
+}
+
+function hello(first) {
+  const g = GUESTS.find(x => x.name === persona);
+  const usual = g && g.visits >= 5 ? MENU.find(m => m.name === g.usual) : null;
+  if (usual) {
+    convo.usual = usual.id;
+    return {reply: `Hi ${first}, good to hear from you! Shall I get your usual ${usual.name} ready for pickup? I can also book a table or share the menu.`};
+  }
+  return {reply: `Hi ${first}, welcome to The Talisman Coffee! I can book you a table, take an order for pickup or delivery, or share the menu. What would you like?`};
+}
+
+function ensureGuest(name) {
+  const g = GUESTS.find(x => x.name === name);
+  if (g) g.last = 0; else GUESTS.push({name, visits: 1, last: 0, usual: 'Not yet', spend: 0});
+}
+
+function respondTo(text) {
+  const s = text.toLowerCase().replace(/[’‘]/g, "'");
+  const hi = isHinglish(s), first = persona.split(' ')[0];
+  switch (intentOf(s)) {
+    case 'accept':
+      if (convo.offer) { const o = convo.offer; return confirmBooking(o, TABLES.find(t => t.id === o.table), hi); }
+      { const id = convo.usual; convo.usual = null; return createOrder([[id, 1]], 'Pickup', hi); }
+    case 'decline': convo.offer = null; convo.usual = null; return {reply: hi ? 'Koi baat nahi. Aur kuch help chahiye?' : 'No problem. Anything else I can help with?'};
+    case 'booking': return handleBooking(s, hi);
+    case 'order': convo.usual = null; return createOrder(findItems(s), /\b(deliver|delivery|delivered|ghar|home)\b/.test(s) ? 'Delivery' : 'Pickup', hi);
+    case 'status': return handleStatus();
+    case 'menu': return {reply: menuText()};
+    case 'hours': return {reply: "We're open every day from 8 am to 10 pm. The last table booking is at 9:30 pm."};
+    case 'thanks': return {reply: 'Anytime! See you soon ☕'};
+    case 'hello': return hello(first);
+    default: return {reply: "I'm not sure about that one, so I've passed your message to the team. Someone will reply here shortly.",
+      after: () => { escalations++; addFeed(`Alfred passed a message from ${persona} to staff`, 'staff'); pushConvo(persona, text, "I'm not sure about that one, so I've passed your message to the team. Someone will reply here shortly."); renderAll(); }};
+  }
+}
+
+function addMsg(who, html, withTime = true) {
+  const d = document.createElement('div');
+  d.className = 'msg ' + who;
+  d.innerHTML = html + (withTime ? `<span class="ts">${fmtTime(hhmm(nowMin()))}</span>` : '');
+  const chat = $('#chat'); chat.appendChild(d); chat.scrollTop = chat.scrollHeight;
+  return d;
+}
+function botSay(html) {
+  return new Promise(res => {
+    const typing = addMsg('bot typing', '<span></span><span></span><span></span>', false);
+    setTimeout(() => { typing.remove(); addMsg('bot', html); renderChips(); res(); }, Math.min(650 + html.length * 5, 1500));
+  });
+}
+
+async function send(text) {
+  text = text.trim();
+  if (!text || busy) return;
+  busy = true; $('#msg').value = '';
+  addMsg('me', esc(text));
+  sessionChats.add(persona); renderStats();
+  const r = respondTo(text);
+  await botSay(r.reply);
+  if (r.after) r.after();
+  busy = false;
+}
+
+const CHIPS = ['Table for 4 tomorrow at 8pm', '2 filter kaapi and a benne dosa', 'Kal 7 baje 3 log ke liye table chahiye', "What's on the menu?", "Where's my order?", 'Hi!'];
+function renderChips() {
+  const list = (convo.offer || convo.usual ? ['Yes please', 'No thanks'] : []).concat(CHIPS);
+  $('#chips').innerHTML = list.map((c, i) => `<button type="button" class="chip${i < 2 && (convo.offer || convo.usual) ? ' hot' : ''}" data-chip="${esc(c)}">${esc(c)}</button>`).join('');
+}
+$('#chips').addEventListener('click', e => { const c = e.target.closest('[data-chip]'); if (c) send(c.dataset.chip); });
+$('#composer').addEventListener('submit', e => { e.preventDefault(); send($('#msg').value); });
+
+function resetChat() {
+  convo = {pending: null, offer: null, usual: null};
+  $('#chat').innerHTML = `<p class="note">You're messaging The Talisman Coffee on WhatsApp as ${esc(persona)}. Try booking a table or ordering a coffee, in English or Hinglish.</p>`;
+  renderChips();
+}
+$('#persona').innerHTML = PERSONAS.map(p => `<option value="${esc(p.name)}">${esc(p.label)}</option>`).join('');
+$('#persona').addEventListener('change', e => { persona = e.target.value; busy = false; resetChat(); });
+
+/* Drawer on smaller screens */
+const openCg = () => { $('#concierge').classList.add('open'); $('#scrim').classList.add('show'); $('#alfredNavBtn').classList.remove('has-new'); setTimeout(() => $('#msg').focus(), 250); };
+const closeCg = () => { $('#concierge').classList.remove('open'); $('#scrim').classList.remove('show'); };
+$('#alfredNavBtn').addEventListener('click', openCg);
+$('#cgClose').addEventListener('click', closeCg);
+$('#scrim').addEventListener('click', closeCg);
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  closeCg();
+  $$('.modal-scrim.open').forEach(s => s.classList.remove('open'));
+  $('#bellPanel').classList.remove('open');
+});
+
+/* Start */
+resetChat();
+renderAll();
+let rz; window.addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(renderWeek, 150); });
+setInterval(() => { renderClock(); renderStats(); renderFloor(); renderFloorDetail(); renderUpNext(); renderBell(); }, 30000);
+})();
+
+</script>
+</body>
+</html>

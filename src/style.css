@@ -1327,8 +1327,8 @@ body {
 .project-card {
   display: flex;
   flex-direction: column;
-  background-color: #0d1117;
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  background-color: #101010;
+  border: 1px solid var(--border-dark-band);
   border-radius: 8px;
   overflow: hidden;
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease, box-shadow 0.4s ease;
@@ -1336,14 +1336,14 @@ body {
 
 .project-card:hover {
   transform: translateY(-6px);
-  border-color: rgba(88, 166, 255, 0.5);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(88, 166, 255, 0.15);
+  border-color: rgba(245, 244, 240, 0.35);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(245, 244, 240, 0.08);
 }
 
 .project-thumb-frame {
   width: 100%;
   padding: 1.25rem;
-  background-color: #161b22;
+  background-color: #161616;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   flex-direction: column;
@@ -1362,23 +1362,23 @@ body {
   font-weight: 700;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: #58a6ff;
-  background-color: rgba(88, 166, 255, 0.1);
-  padding: 0.25rem 0.6rem;
-  border-radius: 4px;
-  border: 1px solid rgba(88, 166, 255, 0.2);
+  color: var(--text-white);
+  background-color: rgba(245, 244, 240, 0.08);
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-dark-band);
 }
 
 .project-status-dot {
   font-size: 0.6rem;
   font-weight: 700;
   letter-spacing: 0.1em;
-  color: #3fb950;
+  color: var(--text-white);
   text-transform: uppercase;
 }
 
 .project-preview-graphic {
-  background-color: #0d1117;
+  background-color: #0a0a0a;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 6px;
   padding: 0.85rem 1rem;
@@ -1396,13 +1396,122 @@ body {
   text-overflow: ellipsis;
 }
 
-.code-kwd { color: #ff7b72; font-weight: 600; }
-.code-var { color: #79c0ff; }
-.code-fn { color: #d2a8ff; }
-.code-arg { color: #ffa657; }
-.code-val { color: #a5d6ff; }
-.code-str { color: #a5d6ff; }
-.code-cmnt { color: #8b949e; font-style: italic; }
+.code-kwd { color: var(--text-white); font-weight: 600; }
+.code-var { color: rgba(245, 244, 240, 0.55); }
+.code-fn { color: #10b981; }
+.code-arg { color: rgba(245, 244, 240, 0.55); }
+.code-val { color: rgba(245, 244, 240, 0.85); }
+.code-str { color: rgba(245, 244, 240, 0.85); }
+.code-cmnt { color: rgba(245, 244, 240, 0.35); font-style: italic; }
+
+/* Folder-tab hover-reveal prototype (Card 1 only, for now) */
+.project-folder .project-card-header {
+  justify-content: flex-start;
+  gap: 0.6rem;
+}
+
+.project-folder .project-status-dot {
+  margin-left: auto;
+}
+
+.project-tab {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.project-folder:hover .project-tab {
+  transform: translateY(8px);
+}
+
+.project-tab-num {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--text-white);
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.project-tab-arrow {
+  font-size: 0.85rem;
+  line-height: 1;
+  color: rgba(245, 244, 240, 0.35);
+  transition: color 0.4s ease, transform 0.4s ease;
+  flex: none;
+  margin-top: 0.1rem;
+}
+
+.project-folder:hover .project-tab-arrow {
+  color: #10b981;
+  transform: translate(2px, -2px);
+}
+
+.preview-window {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+  background-color: #0a0a0a;
+}
+
+.preview-chrome {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.5rem 0.7rem;
+  background-color: #111111;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.chrome-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: rgba(245, 244, 240, 0.18);
+}
+
+.chrome-url {
+  margin-left: 0.5rem;
+  font-family: ui-monospace, SFMono-Regular, "JetBrains Mono", monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.02em;
+  color: rgba(245, 244, 240, 0.3);
+}
+
+.preview-shot-wrap {
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+}
+
+.preview-shot {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  filter: grayscale(1) brightness(0.82) contrast(1.08);
+  transform: scale(1);
+  transition: filter 0.6s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.project-folder:hover .preview-shot {
+  filter: grayscale(0.3) brightness(0.95) contrast(1.05);
+  transform: scale(1.045);
+}
+
+@media (hover: none) {
+  .preview-shot {
+    filter: grayscale(0.55) brightness(0.9) contrast(1.05);
+    transform: scale(1);
+  }
+  .project-folder .project-tab {
+    transform: none;
+  }
+}
 
 .project-info {
   padding: 2rem;
@@ -1443,8 +1552,8 @@ body {
   text-transform: uppercase;
   color: var(--text-white);
   background-color: rgba(255, 255, 255, 0.08);
-  padding: 0.3rem 0.65rem;
-  border-radius: 2px;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
 }
 
 .project-link {
@@ -1469,6 +1578,13 @@ body {
 
 .project-link:hover .link-arrow {
   transform: translateX(4px);
+}
+
+.project-link.is-static {
+  color: var(--text-muted-dark);
+  border-bottom-color: rgba(255, 255, 255, 0.2);
+  cursor: default;
+  pointer-events: none;
 }
 
 /* --------------------------------------------------------------------------
@@ -2438,7 +2554,7 @@ body {
     position: absolute;
     right: 1.25rem;
     top: 0.75rem;
-    font-size: clamp(1.8rem, 5.5vw, 2.8rem);
+    font-size: clamp(1.6rem, 4.5vw, 2.2rem);
     font-weight: 900;
     line-height: 1;
     color: rgba(8, 8, 8, 0.14);
@@ -2453,7 +2569,7 @@ body {
     width: calc(100% - 50px) !important;
     margin-left: 50px !important;
     position: relative;
-    padding-right: 3.5rem;
+    padding-right: 5rem;
   }
 
   .process-card-title {
@@ -3142,6 +3258,22 @@ html, body {
 @media (max-width: 767px) {
   :root {
     --container-padding: clamp(1.2rem, 5vw, 1.8rem);
+  }
+
+  /* Keep the folder-tab category badge ("AUTOMATION / N8N", etc.) a clean
+     single-line pill on narrow screens; let the header row wrap onto a
+     second line instead of breaking the pill shape itself. */
+  .project-category-badge {
+    white-space: nowrap;
+  }
+
+  .project-folder .project-card-header {
+    flex-wrap: wrap;
+    row-gap: 0.4rem;
+  }
+
+  .project-folder .project-status-dot {
+    margin-left: 0;
   }
 
   /* Nav Bar Mobile Refinement */
