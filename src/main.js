@@ -13,19 +13,13 @@ const FRAME_PATH_PREFIX = '/assets/frames/frame_';
 const FRAME_PATH_SUFFIX = '.webp';
 
 // DOM Elements
-const preloader = document.getElementById('preloader');
-const preloaderBar = document.getElementById('preloader-bar');
-const preloaderPercent = document.getElementById('preloader-percent');
 const heroScrollContainer = document.getElementById('hero-scroll-container');
 const canvas = document.getElementById('hero-canvas');
 const ctx = canvas.getContext('2d');
 
 // State Variables
 const loadedImages = [];
-let imagesLoadedCount = 0;
 let currentProgressIndex = 0;
-let targetProgressIndex = 0;
-let animationFrameId = null;
 let isPreloaded = false;
 let isScrollLocked = true;
 
@@ -38,9 +32,6 @@ if (window.location.hash) {
 }
 window.scrollTo(0, 0);
 
-const MIN_PRELOADER_DURATION = 3000; // 3 seconds minimum display time
-let preloaderStartTime = Date.now();
-let displayedPercent = 0;
 
 
 /**
@@ -71,15 +62,13 @@ function preloadAllFrames() {
       }
     };
 
-    preloaderStartTime = Date.now();
-
+    
     for (let i = 0; i < TOTAL_FRAMES; i++) {
       const img = new Image();
       img.src = getFrameFilename(i);
       img.onload = () => {
         loadedImages[i] = img;
         loadedCount++;
-        imagesLoadedCount++;
         if (i === 0) {
           resizeCanvas();
           renderFrame(0);
@@ -88,7 +77,6 @@ function preloadAllFrames() {
       };
       img.onerror = () => {
         loadedCount++;
-        imagesLoadedCount++;
         if (loadedCount >= TOTAL_FRAMES) finish();
       };
     }
@@ -354,7 +342,6 @@ function onScroll() {
   if (!isPreloaded || !heroScrollContainer) return;
 
   if (isScrollLocked) {
-    targetProgressIndex = 0;
     currentProgressIndex = 0;
     updateSkillReveals(0);
     return;
@@ -364,7 +351,6 @@ function onScroll() {
 
   // Hard clamp top position: if scroll is at top, force progress to frame 0
   if (currentY <= 5) {
-    targetProgressIndex = 0;
     updateSkillReveals(0);
     return;
   }
@@ -378,9 +364,7 @@ function onScroll() {
   const currentScroll = Math.max(0, -rect.top);
   const progress = Math.min(1, Math.max(0, currentScroll / scrollableDistance));
 
-  // Map progress to continuous frame index
-  targetProgressIndex = progress * (TOTAL_FRAMES - 1);
-
+  
   // Trigger one-way scroll reactive skill item reveals
   updateSkillReveals(progress);
 }
@@ -389,7 +373,7 @@ function onScroll() {
  * Reveal/hide capability items as scroll progress crosses thresholds (bidirectional 60fps sync)
  */
 function updateSkillReveals(progress) {
-  const capabilityItems = document.querySelectorAll('.capability-item, .skill-item');
+  const capabilityItems = document.querySelectorAll('.capability-item');
   if (!capabilityItems.length) return;
 
   const isDesktop = window.innerWidth >= 1024;
