@@ -1,0 +1,21 @@
+# Tushit Audi — Web Developer & Automation Specialist
+
+> Personal portfolio and case studies for Tushit Audi, a web developer and automation specialist building high-performance web applications, n8n workflow automations, SaaS platforms, and mobile apps. Based in Hubli, India, available globally.
+
+Tushit builds production-grade software using AI-assisted development and workflow automation, and leads The Talisman, an AI automation agency.
+
+## Work
+
+- [The Talisman Coffee — Cafe Manager Dashboard](https://tushitaudi.com/work/talisman-coffee.html): Case study for a cafe operations dashboard concept.
+- [The Talisman — AI Automation Agency](https://the-talisman-v02.vercel.app): Lead-capture landing page offering a free Automation Audit.
+
+## Contact
+
+- [Email](mailto:tushitaudi@gmail.com)
+- [LinkedIn](https://www.linkedin.com/in/tushitaudi)
+- [GitHub](https://github.com/Tushit-exe)
+
+## Optional
+
+- [Privacy Policy](https://tushitaudi.com/privacy.html)
+- [Terms](https://tushitaudi.com/terms.html)
