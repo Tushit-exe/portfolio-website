@@ -548,14 +548,14 @@ function initInteractiveTerminal() {
     ],
     skills: [
       { text: '// TECHNICAL CAPABILITIES:', type: 'comment' },
-      { text: '⚡ Web Apps     : React, Next.js, Vite, Vanilla CSS, GSAP Animations', type: 'success' },
+      { text: '⚡ Web Apps     : Vite, Vanilla JS, GSAP Animations, WebGL (Cobe)', type: 'success' },
       { text: '⚡ Automation   : n8n Workflow Automation, Webhooks, REST APIs, Node.js', type: 'info' },
       { text: '⚡ AI Tools     : Gemini API, LLM Function Calling, Prompt Engineering', type: 'str' },
       { text: '⚡ Infrastructure: PostgreSQL, Docker, Git, Vercel, Supabase', type: 'flag' }
     ],
     stack: [
       { text: '// ACTIVE ECOSYSTEM STACK:', type: 'comment' },
-      { text: '• Frontend    : React | Next.js | Vite | Tailwind / CSS', type: 'info' },
+      { text: '• Frontend    : Vite | Vanilla JS/CSS | GSAP Animations', type: 'info' },
       { text: '• Automation  : n8n Self-Hosted | Webhook Listeners | Zapier', type: 'success' },
       { text: '• AI & Cloud  : Gemini 2.5 | Claude 3.5 | Docker | PostgreSQL', type: 'str' }
     ],
