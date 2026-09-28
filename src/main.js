@@ -44,14 +44,16 @@ function getFrameFilename(index) {
 
 /**
  * Preload every hero frame before handing scroll control to the user.
- * Frames are small (WebP, ~14KB avg) so loading all 118 up front is fast
- * and guarantees the scrubber never lands on a not-yet-loaded frame
- * (which previously showed as a stutter/pop while scrolling the hero).
- * A hard safety timeout still lets the site continue on a very slow
- * connection rather than blocking forever.
+ * Resolves once a critical initial batch of frames is ready instead of
+ * waiting on all TOTAL_FRAMES (or the 8s timeout) -- that used to block
+ * scroll/interaction until the full sequence finished loading. The rest
+ * of the frames keep loading in the background below; getClosestLoadedFrame()
+ * already falls back to the nearest ready frame if the scrubber reaches
+ * one that hasn't arrived yet, so this doesn't change what gets drawn.
  */
 function preloadAllFrames() {
   return new Promise((resolve) => {
+    const CRITICAL_FRAME_COUNT = Math.min(16, TOTAL_FRAMES);
     let loadedCount = 0;
     let isResolved = false;
 
@@ -62,7 +64,6 @@ function preloadAllFrames() {
       }
     };
 
-    
     for (let i = 0; i < TOTAL_FRAMES; i++) {
       const img = new Image();
       img.src = getFrameFilename(i);
@@ -73,16 +74,17 @@ function preloadAllFrames() {
           resizeCanvas();
           renderFrame(0);
         }
-        if (loadedCount >= TOTAL_FRAMES) finish();
+        if (loadedCount >= CRITICAL_FRAME_COUNT) finish();
       };
       img.onerror = () => {
         loadedCount++;
-        if (loadedCount >= TOTAL_FRAMES) finish();
+        if (loadedCount >= CRITICAL_FRAME_COUNT) finish();
       };
     }
 
-    // Safety net: never block interaction forever on a very slow connection
-    setTimeout(finish, 8000);
+    // Safety net: don't block interaction forever on a very slow connection
+    // (shorter now since we're only waiting on the critical batch, not all frames)
+    setTimeout(finish, 4000);
   });
 }
 
