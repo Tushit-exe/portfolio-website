@@ -172,6 +172,7 @@ function initPreloader() {
     preloadAllFrames().then(() => {
       resizeCanvas();
       renderFrame(0);
+      updateHeroOverlaySpacing();
       onScroll();
     });
     return;
@@ -225,6 +226,7 @@ function initPreloader() {
     window.scrollTo(0, 0);
     resizeCanvas();
     renderFrame(0);
+    updateHeroOverlaySpacing();
 
     const canvasWrapper = document.getElementById('hero-canvas-wrapper');
     if (canvasWrapper) canvasWrapper.classList.add('is-loaded');
@@ -338,6 +340,7 @@ let scrollTriggerRefreshTimeout = null;
 let lastKnownInnerWidth = window.innerWidth;
 function onResize() {
   resizeCanvas();
+  updateHeroOverlaySpacing();
 
   // Mobile browsers fire `resize` when their address bar/toolbar shows or hides
   // while scrolling -- that only changes innerHeight, never innerWidth. Refreshing
@@ -459,6 +462,45 @@ function renderFrame(rawFrameIndex) {
   ctx.save();
   ctx.drawImage(img, drawX, drawY, drawW, drawH);
   ctx.restore();
+}
+
+// Positions the mobile capabilities card directly beneath the hero portrait image.
+// Read-only: mirrors the same "contain fit" math renderFrame() already uses to know
+// where the portrait's bottom edge lands on screen, then exposes that as a CSS
+// variable so the overlay layout (not the canvas itself) can react to it. Does not
+// change how the hero canvas renders or scrolls.
+function updateHeroOverlaySpacing() {
+  const heroLeftCol = document.querySelector('.hero-left-col');
+  if (!heroLeftCol || !canvas) return;
+
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+
+  // Desktop/tablet layout doesn't use this variable; avoid doing needless work there.
+  if (width >= 768) return;
+
+  const img = getClosestLoadedFrame(Math.round(currentProgressIndex));
+  if (!img || !img.complete) return;
+
+  const imgAspect = img.width / img.height;
+  const viewportAspect = width / height;
+
+  let drawW, drawH, drawY;
+  const scaleMultiplier = 1.65; // matches the mobile branch in renderFrame()
+
+  if (viewportAspect > imgAspect) {
+    drawH = height * scaleMultiplier;
+  } else {
+    drawW = width * scaleMultiplier;
+    drawH = drawW / imgAspect;
+  }
+  drawY = (height - drawH) / 2;
+
+  const portraitBottom = drawY + drawH;
+  const leftColBottom = heroLeftCol.getBoundingClientRect().bottom;
+  const gap = Math.max(24, portraitBottom - leftColBottom + 24);
+
+  document.documentElement.style.setProperty('--capabilities-gap', `${gap}px`);
 }
 
 /* ==========================================================================
