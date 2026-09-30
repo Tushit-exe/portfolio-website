@@ -3326,7 +3326,7 @@ html, body {
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    gap: clamp(1.5rem, 18vh, 5rem);
+    gap: clamp(2rem, 30vh, 11rem);
     width: 100%;
     pointer-events: none;
   }
@@ -3500,6 +3500,26 @@ html, body {
   .footer-socials {
     flex-wrap: wrap;
     gap: 1.2rem;
+  }
+
+  /* Ticker/live-status bar: shrink for mobile */
+  .ticker-section {
+    padding: 0.7rem 0;
+  }
+  .ticker-wrapper {
+    gap: 0.5rem;
+  }
+  .ticker-track span {
+    font-size: 0.62rem;
+    letter-spacing: 0.16em;
+  }
+
+  /* How We Work: align connector line with the node dot on mobile */
+  .process-node-wrapper {
+    left: 24px;
+  }
+  .process-connector {
+    display: none;
   }
 }
 

@@ -4,6 +4,12 @@ import createGlobe from 'cobe';
 
 gsap.registerPlugin(ScrollTrigger);
 
+// Prevent GSAP's auto-refresh from firing on mobile-browser-chrome resize events
+// (address bar show/hide as the page scrolls), which was recalculating the pinned
+// hero's height mid-scroll and yanking the page back up while scrolling through
+// the sections below it.
+ScrollTrigger.config({ ignoreMobileResize: true });
+
 /* ==========================================================================
    TUSHIT AUDI — HERO CANVAS ROTATION & SCROLL CONTROLLER
    ========================================================================== */
@@ -329,8 +335,21 @@ function resizeCanvas() {
 // setups. Keep the canvas fit itself instant (cheap, keeps things looking sharp
 // while resizing), but debounce the expensive refresh to once the resize settles.
 let scrollTriggerRefreshTimeout = null;
+let lastKnownInnerWidth = window.innerWidth;
 function onResize() {
   resizeCanvas();
+
+  // Mobile browsers fire `resize` when their address bar/toolbar shows or hides
+  // while scrolling -- that only changes innerHeight, never innerWidth. Refreshing
+  // ScrollTrigger on those recalculates the (vh-based) pinned hero height mid-scroll
+  // and snaps the page back up, so on mobile widths only, skip refreshing unless the
+  // layout width actually changed (real orientation change), leaving desktop resize
+  // behavior untouched.
+  const isMobileWidth = window.innerWidth <= 767;
+  const widthChanged = window.innerWidth !== lastKnownInnerWidth;
+  lastKnownInnerWidth = window.innerWidth;
+  if (isMobileWidth && !widthChanged) return;
+
   clearTimeout(scrollTriggerRefreshTimeout);
   scrollTriggerRefreshTimeout = setTimeout(() => {
     ScrollTrigger.refresh();
@@ -1056,7 +1075,12 @@ function initProcessTimeline() {
 
   // Debounced resize handler
   let resizeTimeout;
+  let lastProcessWidth = window.innerWidth;
   window.addEventListener('resize', () => {
+    const isMobileWidth = window.innerWidth <= 767;
+    const widthChanged = window.innerWidth !== lastProcessWidth;
+    lastProcessWidth = window.innerWidth;
+    if (isMobileWidth && !widthChanged) return;
     clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(() => {
       totalPathLength = updatePathGeometry();
