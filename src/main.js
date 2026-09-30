@@ -342,11 +342,13 @@ function onResize() {
   // Mobile browsers fire `resize` when their address bar/toolbar shows or hides
   // while scrolling -- that only changes innerHeight, never innerWidth. Refreshing
   // ScrollTrigger on those recalculates the (vh-based) pinned hero height mid-scroll
-  // and snaps the page back up, so only refresh for resizes that actually change
-  // the layout width (real window resizes / orientation changes).
+  // and snaps the page back up, so on mobile widths only, skip refreshing unless the
+  // layout width actually changed (real orientation change), leaving desktop resize
+  // behavior untouched.
+  const isMobileWidth = window.innerWidth <= 767;
   const widthChanged = window.innerWidth !== lastKnownInnerWidth;
   lastKnownInnerWidth = window.innerWidth;
-  if (!widthChanged) return;
+  if (isMobileWidth && !widthChanged) return;
 
   clearTimeout(scrollTriggerRefreshTimeout);
   scrollTriggerRefreshTimeout = setTimeout(() => {
@@ -1075,9 +1077,10 @@ function initProcessTimeline() {
   let resizeTimeout;
   let lastProcessWidth = window.innerWidth;
   window.addEventListener('resize', () => {
+    const isMobileWidth = window.innerWidth <= 767;
     const widthChanged = window.innerWidth !== lastProcessWidth;
     lastProcessWidth = window.innerWidth;
-    if (!widthChanged) return;
+    if (isMobileWidth && !widthChanged) return;
     clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(() => {
       totalPathLength = updatePathGeometry();
