@@ -419,7 +419,7 @@ function renderFrame(rawFrameIndex) {
 
   let scaleMultiplier = 1.12;
   if (isMobile) {
-    scaleMultiplier = 0.95;
+    scaleMultiplier = 1.65;
   } else if (isTablet) {
     scaleMultiplier = 1.05;
   } else if (isUltraWide) {
